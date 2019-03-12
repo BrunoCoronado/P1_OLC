@@ -1,18 +1,14 @@
 package sistema.ui;
 
+import sistema.administracion.AdministracionArchivos;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Principal extends JFrame{
 	//declaracion de componenetes visuales
@@ -22,6 +18,9 @@ public class Principal extends JFrame{
 	JTextArea txtEditor, txtConsola, txtVariables;
 	JComboBox<String> cmbReportes;
 	JButton btnReportar;
+	JFileChooser fileChooser;
+
+	AdministracionArchivos administracionArchivos;
 	
 	public Principal(){
 		iniciarComponentes();
@@ -33,15 +32,31 @@ public class Principal extends JFrame{
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		//creacion del menu bar
+		administracionArchivos = new AdministracionArchivos();
+		fileChooser = new JFileChooser();
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter(".uweb", "uweb");
+		fileChooser.setFileFilter(filtro);
 		menuBar = new JMenuBar();
 		menu = new JMenu("Menú Archivo");
 		menuItem = new JMenuItem("Nuevo Archivo");
+		menuItem.addActionListener(e -> {
+			crearArchivoNuevo(e);
+		});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Abrir Archivo");
+		menuItem.addActionListener(e -> {
+			abrirArchivo(e);
+		});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Guardar");
+		menuItem.addActionListener(e -> {
+			guardarArchivo(e, 1);
+		});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Guardar Como");
+		menuItem.addActionListener(e -> {
+			guardarArchivo(e, 2);
+		});
 		menu.add(menuItem);
 		menu.addSeparator();
 		menuItem = new JMenuItem("Compilar");
@@ -94,5 +109,51 @@ public class Principal extends JFrame{
 		tabbedPaneSalida.add("Variables", panelVariables);
 		this.add(tabbedPaneEditor, BorderLayout.CENTER);
 		this.add(tabbedPaneSalida, BorderLayout.SOUTH);
+	}
+
+	private void crearArchivoNuevo(ActionEvent evt){
+		try{
+			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+				this.setTitle(fileChooser.getSelectedFile().getPath());
+				administracionArchivos.nuevoArchivo(fileChooser.getSelectedFile().getPath()+".uweb");
+			}
+		}catch (Exception ex){
+			System.err.println("ERROR AL CREAR ARCHIVO");
+			ex.printStackTrace();
+		}
+	}
+
+	private void abrirArchivo(ActionEvent evt){
+		try{
+			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+				this.setTitle(fileChooser.getSelectedFile().getPath());
+				txtEditor.setText(administracionArchivos.abrirArchivo(fileChooser.getSelectedFile().getPath()));
+			}
+		}catch (Exception ex){
+			System.err.println("ERROR AL ABRIR ARCHIVO");
+			ex.printStackTrace();
+		}
+	}
+
+	private void guardarArchivo(ActionEvent evt, int tipo){
+		try{
+			switch (tipo){
+				case 1:
+					if(!this.getTitle().equals(""))
+						administracionArchivos.guardarArchivo(this.getTitle() + ".uweb", txtEditor.getText(), tipo);
+					else
+						JOptionPane.showMessageDialog(this, "No existe referencia a un archivo", "Error al Guardar", JOptionPane.WARNING_MESSAGE);
+					break;
+				case 2:
+					if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+						this.setTitle(fileChooser.getSelectedFile().getPath());
+						administracionArchivos.guardarArchivo(fileChooser.getSelectedFile().getPath() + ".uweb", txtEditor.getText(), tipo);
+					}
+					break;
+			}
+		}catch (Exception ex){
+			System.err.println("ERROR AL GUARDAR ARCHIVO");
+			ex.printStackTrace();
+		}
 	}
 }
