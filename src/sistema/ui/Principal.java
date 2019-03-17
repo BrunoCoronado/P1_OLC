@@ -1,11 +1,16 @@
 package sistema.ui;
 
+import main.Main;
 import sistema.administracion.AdministracionArchivos;
+import sistema.analisis.Scanner;
+import sistema.graficas.GraficaTokens;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,6 +29,7 @@ public class Principal extends JFrame{
 	
 	public Principal(){
 		iniciarComponentes();
+		inicializarEstructuras();
 	}
 	
 	private void iniciarComponentes() {
@@ -60,6 +66,9 @@ public class Principal extends JFrame{
 		menu.add(menuItem);
 		menu.addSeparator();
 		menuItem = new JMenuItem("Compilar");
+		menuItem.addActionListener(e -> {
+			compilar(e);
+		});
 		menu.add(menuItem);
 		menuBar.add(menu);
 		menu = new JMenu("Menú Ayuda");
@@ -155,5 +164,22 @@ public class Principal extends JFrame{
 			System.err.println("ERROR AL GUARDAR ARCHIVO");
 			ex.printStackTrace();
 		}
+	}
+
+	private void compilar(ActionEvent evt){
+		try{
+			StringReader strReader = new StringReader(txtEditor.getText());
+			Scanner scanner = new Scanner(strReader);
+			scanner.yylex();
+			GraficaTokens graficarTokens = new GraficaTokens();
+			graficarTokens.graficarListaTokens();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+	private void inicializarEstructuras(){
+		Main.tokens = new ArrayList<>();
+		Main.errores = new ArrayList<>();
 	}
 }
