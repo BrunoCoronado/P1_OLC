@@ -58,6 +58,8 @@ identificador = [a-z] ([a-z] | [0-9] | "_")*
     "="                     { addToken(yytext(), "igual"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "\""                    { addToken(yytext(), "comillas");  string.setLength(0); yybegin(TEXTO); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "?"                     { addToken(yytext(), "interrogacion"); yybegin(HSCRIPT);/*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "~"                     { addToken(yytext(), "aceptacion");/*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+
     "compi"                 { addToken(yytext(), "Palabra Reservada compi"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }                     
     "cabecera"              { addToken(yytext(), "Palabra Reservada cabecera"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "titulo"                { addToken(yytext(), "Palabra Reservada titulo");  /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
@@ -132,6 +134,7 @@ identificador = [a-z] ([a-z] | [0-9] | "_")*
     "||"                    { addToken(yytext(), "operador OR"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "!"                     { addToken(yytext(), "operador NOT"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "#"                     { addToken(yytext(), "numerañ"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "~"                     { addToken(yytext(), "aceptacion");/*return new Symbol(sym. , yyline , yychar , yytext());*/ }
 
     "hs"                    { addToken(yytext(), "Palabra Reservada de difinicion HScript"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "true"                  { addToken(yytext(), "Palabra Reservada true"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
@@ -181,3 +184,7 @@ identificador = [a-z] ([a-z] | [0-9] | "_")*
     \\\"                    { string.append( '\"' ); }
     \\                      { string.append( '\\' ); }
 }
+
+.                           { addError(yytext(), "NO RECONOCIDO"); /*return new Symbol(sym.identificador , yyline , yychar , yytext()); */}
+
+

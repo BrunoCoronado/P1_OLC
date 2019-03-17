@@ -172,7 +172,11 @@ public class Principal extends JFrame{
 			Scanner scanner = new Scanner(strReader);
 			scanner.yylex();
 			GraficaTokens graficarTokens = new GraficaTokens();
-			graficarTokens.graficarListaTokens();
+			if(Main.errores.size() > 0){
+				graficarTokens.graficarListaErrores();
+			}else{
+				graficarTokens.graficarListaTokens();
+			}
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}

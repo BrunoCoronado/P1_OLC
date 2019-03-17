@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6fdf48cc-6958-4902-93a6-740ea375e5cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/scanner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/scanner.jflex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/sistema/ui/Principal.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/ui/Principal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sistema/analisis/scanner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sistema/analisis/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/Scanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/scanner.jflex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/ui/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/ui/Principal.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -30,34 +26,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sistema/administracion/AdministracionArchivos.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="27" column="34" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="22" column="90" selection-start-line="22" selection-start-column="90" selection-end-line="22" selection-end-column="90" />
+            <state relative-caret-position="208">
+              <caret line="43" column="74" lean-forward="true" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18225">
-              <caret line="1816" column="19" selection-start-line="1816" selection-start-column="19" selection-end-line="1816" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -65,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sistema/ui/Principal.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1238">
-              <caret line="49" column="11" lean-forward="true" selection-start-line="49" selection-start-column="11" selection-end-line="49" selection-end-column="11" />
+            <state relative-caret-position="313">
+              <caret line="173" column="60" selection-start-line="173" selection-start-column="60" selection-end-line="173" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -88,9 +63,9 @@
       <list>
         <option value="$PROJECT_DIR$/src/sistema/administracion/AdministracionArchivos.java" />
         <option value="$PROJECT_DIR$/src/sistema/analisis/scanner.java" />
-        <option value="$PROJECT_DIR$/src/sistema/ui/Principal.java" />
-        <option value="$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java" />
         <option value="$PROJECT_DIR$/src/sistema/analisis/Scanner.java" />
+        <option value="$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java" />
+        <option value="$PROJECT_DIR$/src/sistema/ui/Principal.java" />
       </list>
     </option>
   </component>
@@ -201,18 +176,18 @@
       <workItem from="1552516517431" duration="8386000" />
       <workItem from="1552575123432" duration="3178000" />
       <workItem from="1552581593160" duration="108000" />
-      <workItem from="1552782732605" duration="1152000" />
+      <workItem from="1552782732605" duration="1628000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14969000" />
+    <option name="totallyTimeSpent" value="15445000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14621131" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14621131" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -221,7 +196,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32944915" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3273305" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3273305" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3993644" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -277,26 +252,6 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sistema/ui/Principal.java</url>
-          <line>173</line>
-          <properties />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/sistema/ui/Principal.java</url>
-          <line>168</line>
-          <properties class="sistema.ui.Principal" method="compilar">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/sistema/analisis/scanner.java" />
     <entry file="file://$PROJECT_DIR$/src/main/Main.java">
@@ -316,27 +271,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="553">
+          <caret line="1816" column="19" selection-start-line="1816" selection-start-column="19" selection-end-line="1816" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sistema/graficas/GraficaTokens.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="22" column="90" selection-start-line="22" selection-start-column="90" selection-end-line="22" selection-end-column="90" />
+        <state relative-caret-position="208">
+          <caret line="43" column="74" lean-forward="true" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18225">
-          <caret line="1816" column="19" selection-start-line="1816" selection-start-column="19" selection-end-line="1816" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sistema/ui/Principal.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1238">
-          <caret line="49" column="11" lean-forward="true" selection-start-line="49" selection-start-column="11" selection-end-line="49" selection-end-column="11" />
+        <state relative-caret-position="313">
+          <caret line="173" column="60" selection-start-line="173" selection-start-column="60" selection-end-line="173" selection-end-column="60" />
         </state>
       </provider>
     </entry>
