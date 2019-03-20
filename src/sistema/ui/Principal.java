@@ -2,7 +2,10 @@ package sistema.ui;
 
 import main.Main;
 import sistema.administracion.AdministracionArchivos;
+import sistema.analisis.Parser;
 import sistema.analisis.Scanner;
+import sistema.bean.Token;
+import sistema.graficas.ArchivoHTML;
 import sistema.graficas.GraficaTokens;
 
 import java.awt.BorderLayout;
@@ -17,16 +20,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Principal extends JFrame{
 	//declaracion de componenetes visuales
-	JMenuBar menuBar;
-	JMenu menu;
-	JMenuItem menuItem;
-	JTextArea txtEditor, txtConsola, txtVariables;
-	JComboBox<String> cmbReportes;
-	JButton btnReportar;
-	JFileChooser fileChooser;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenuItem menuItem;
+	private JTextArea txtEditor, txtConsola, txtVariables;
+	private JComboBox<String> cmbReportes;
+	private JButton btnReportar;
+	private JFileChooser fileChooser;
 
 	AdministracionArchivos administracionArchivos;
-	
+
+	public static ArrayList<Token> tokens;
+	public static ArrayList<Token> errores;
+	public static ArchivoHTML archivoHTML = new ArchivoHTML();
+
 	public Principal(){
 		iniciarComponentes();
 		inicializarEstructuras();
@@ -168,22 +175,26 @@ public class Principal extends JFrame{
 
 	private void compilar(ActionEvent evt){
 		try{
-			StringReader strReader = new StringReader(txtEditor.getText());
+			StringReader strReader = new StringReader(txtEditor.getText()+ "~");
 			Scanner scanner = new Scanner(strReader);
-			scanner.yylex();
+			Parser parser = new Parser(scanner);
+			parser.parse();
 			GraficaTokens graficarTokens = new GraficaTokens();
-			if(Main.errores.size() > 0){
+			if(errores.size() > 0){
 				graficarTokens.graficarListaErrores();
-			}else{
-				graficarTokens.graficarListaTokens();
 			}
+			graficarTokens.graficarListaTokens();
+			archivoHTML.crearArchivo();
+			archivoHTML.limpiarCodigo();
+			errores =  new ArrayList<>();
+			tokens =  new ArrayList<>();
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
 	}
 
 	private void inicializarEstructuras(){
-		Main.tokens = new ArrayList<>();
-		Main.errores = new ArrayList<>();
+		tokens = new ArrayList<>();
+		errores = new ArrayList<>();
 	}
 }

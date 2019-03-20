@@ -1,0 +1,274 @@
+package sistema.analisis;
+
+import java_cup.runtime.*;
+import sistema.bean.Token;
+import sistema.ui.Principal;
+
+parser code
+{:
+    private boolean pathImagen = false;
+    private boolean botonId = false;
+    private boolean botonTexto = false;
+
+    public void syntax_error(Symbol s){ 
+        System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+        Principal.errores.add(new Token(s.value.toString(), "ERROR SINTACTICO - NO SE ESPERABA ESTE SIMBOLO", s.left, s.right));
+    } 
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido.");
+        Principal.errores.add(new Token(s.value.toString(), "ERROR SINTACTICO IRRECUPERABLE - SIMBOLO NO RECONODIO", s.left, s.right));
+    } 
+
+    private void verificarParametrosImagen(){
+        if(!pathImagen)
+            Principal.errores.add(new Token("path", "ERROR SINTACTICO - IMAGEN - PARAMETRO PATH OBLIGATORIO OMITIDOS", 0, 0));
+    } 
+
+    private void verificarParametrosBoton(){
+        if(!botonId)
+            Principal.errores.add(new Token("path", "ERROR SINTACTICO - BOTON - PARAMETRO ID OBLIGATORIO OMITIDO", 0, 0));
+        if(!botonTexto)
+            Principal.errores.add(new Token("path", "ERROR SINTACTICO - BOTON - PARAMETRO TEXTO OBLIGATORIO OMITIDO", 0, 0));
+    } 
+:}
+
+terminal String aceptacion, mayorQue, menorQue, barra, igual;
+terminal String compi, cabecera, cuerpo, titulo, fondo, espacio, parrafo, alineacion, tipoAlineacion, salto, textoA, textoB;
+terminal String imagen, path, alto, ancho, boton, texto, id;
+terminal String textoEntreEtiquetas, textoEntreComillas, numero;
+
+non terminal A, B, C, D, F, G, I, I1, I2, J, K, M, N, O0, O1, O, P0, P1, P;
+non terminal String E, H, L;
+
+start with A;
+
+A::= menorQue compi mayorQue B menorQue barra compi mayorQue aceptacion
+    {:
+        Principal.archivoHTML.finalizarPagina();
+    :}
+;
+
+B::= B C
+    |C 
+;
+
+C::= menorQue cabecera mayorQue D menorQue barra cabecera mayorQue
+    {:
+        Principal.archivoHTML.finalizarHead();
+    :}
+    |menorQue cuerpo F I1 menorQue barra cuerpo mayorQue
+    {:
+        Principal.archivoHTML.finalizarBody();
+    :}
+;
+
+D::= D E:a
+    {:
+        Principal.archivoHTML.escribirTitulo(a);
+    :}
+    |E:a 
+    {:
+        Principal.archivoHTML.iniciarHead();
+        Principal.archivoHTML.escribirTitulo(a);
+    :}
+;
+
+E::= menorQue titulo textoEntreEtiquetas:a barra titulo mayorQue
+    {:
+        RESULT = a;
+    :}
+    |menorQue titulo mayorQue menorQue barra titulo mayorQue
+    {:
+        RESULT = "";
+    :}
+;
+
+F::= G mayorQue
+    {:
+        Principal.archivoHTML.cerrarEtiquetaInicialBody();
+    :}
+    |mayorQue
+    {:
+        Principal.archivoHTML.iniciarBody();
+        Principal.archivoHTML.cerrarEtiquetaInicialBody();
+    :}
+;
+
+G::= G H:a
+    {:
+        Principal.archivoHTML.agregarBGColor(a);
+    :}
+    |H:a
+    {:
+        Principal.archivoHTML.iniciarBody();
+        Principal.archivoHTML.agregarBGColor(a);
+    :}
+;
+
+H::= fondo igual textoEntreComillas:a
+    {:
+        RESULT = a;
+    :}
+;
+
+I::= menorQue I2 mayorQue I1 menorQue barra espacio mayorQue
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue parrafo J barra parrafo mayorQue
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |menorQue barra salto mayorQue
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |menorQue textoA M barra textoA mayorQue
+    {:
+        Principal.archivoHTML.finalizarH1();  
+    :}
+    |menorQue textoB N barra textoB mayorQue
+    {:
+        Principal.archivoHTML.finalizarH2();  
+    :}
+    |menorQue O0 O mayorQue menorQue barra imagen mayorQue
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |menorQue P0 P mayorQue menorQue barra boton mayorQue
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+;
+
+I1::= I1 I 
+    |I
+;
+
+I2::= espacio
+    {:
+        Principal.archivoHTML.iniciarDiv();  
+    :}
+;
+
+J::= K textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.agregarTextoParrafo(a);  
+    :}
+    |textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.iniciarParrafo();
+        Principal.archivoHTML.agregarTextoParrafo(a);  
+    :}
+    |mayorQue menorQue
+    {:
+        Principal.archivoHTML.iniciarParrafo();
+        Principal.archivoHTML.agregarTextoParrafo("");  
+    :}
+    |barra salto
+    {:
+        Principal.archivoHTML.agreagarSalto("br");
+    :}
+    |J textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.agregarTextoParrafo(a);  
+    :}
+    |J barra salto
+    {:
+        Principal.archivoHTML.agreagarSalto("br");
+    :}
+;
+
+K::= K L:a 
+    {:
+        Principal.archivoHTML.agregarAlineacion(a);
+    :}
+    |L:a
+    {:
+        Principal.archivoHTML.iniciarParrafo();
+        Principal.archivoHTML.agregarAlineacion(a);
+    :}
+;
+
+L::= alineacion igual tipoAlineacion:a
+    {:
+        RESULT = a;
+    :}
+;
+
+M::= textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.iniciarH1();
+        Principal.archivoHTML.agregarTextoH1(a);  
+    :}
+    |mayorQue menorQue
+    {:
+        Principal.archivoHTML.iniciarH1();
+        Principal.archivoHTML.agregarTextoH1("");  
+    :}
+;
+
+N::= textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.iniciarH2();
+        Principal.archivoHTML.agregarTextoH2(a);  
+    :}
+    |mayorQue menorQue
+    {:
+        Principal.archivoHTML.iniciarH2();
+        Principal.archivoHTML.agregarTextoH2("");  
+    :}
+;
+
+O0::= imagen
+    {:
+        Principal.archivoHTML.iniciarImagen();  
+    :}
+;
+
+O::= O O1
+    |O1
+;
+
+O1::= path igual textoEntreComillas:a
+    {:
+        pathImagen = true;
+        Principal.archivoHTML.agregarPathImagen(a);
+    :}
+    |alto igual numero:a
+    {:
+        Principal.archivoHTML.agregarAltoImagen(a);
+    :}
+    |ancho igual numero:a
+    {:
+        Principal.archivoHTML.agregarAnchoImagen(a);
+    :}
+;
+
+P0::= boton 
+    {:
+        Principal.archivoHTML.iniciarBoton();  
+    :}
+;
+
+P::= P P1
+    |P1
+;
+
+P1::= id igual textoEntreComillas:a
+    {:
+        botonId = true;
+        Principal.archivoHTML.agregarId(a);  
+    :}
+    |texto igual textoEntreComillas:a
+    {:
+        botonTexto = true;
+        Principal.archivoHTML.agregarTexto(a);  
+    :}
+;
