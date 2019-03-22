@@ -2,6 +2,7 @@ package sistema.analisis;
 
 import java_cup.runtime.*;
 import sistema.bean.Token;
+import sistema.bean.Variable;
 import sistema.ui.Principal;
 
 parser code
@@ -9,6 +10,7 @@ parser code
     private boolean pathImagen = false;
     private boolean botonId = false;
     private boolean botonTexto = false;
+    private String tipoDato = "";
 
     public void syntax_error(Symbol s){ 
         System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
@@ -22,28 +24,68 @@ parser code
 
     private void verificarParametrosImagen(){
         if(!pathImagen)
-            Principal.errores.add(new Token("path", "ERROR SINTACTICO - IMAGEN - PARAMETRO PATH OBLIGATORIO OMITIDOS", 0, 0));
+            Principal.errores.add(new Token("PATH", "ERROR SINTACTICO - IMAGEN - PARAMETRO PATH OBLIGATORIO OMITIDOS", 0, 0));
     } 
 
     private void verificarParametrosBoton(){
         if(!botonId)
-            Principal.errores.add(new Token("path", "ERROR SINTACTICO - BOTON - PARAMETRO ID OBLIGATORIO OMITIDO", 0, 0));
+            Principal.errores.add(new Token("ID", "ERROR SINTACTICO - BOTON - PARAMETRO ID OBLIGATORIO OMITIDO", 0, 0));
         if(!botonTexto)
-            Principal.errores.add(new Token("path", "ERROR SINTACTICO - BOTON - PARAMETRO TEXTO OBLIGATORIO OMITIDO", 0, 0));
+            Principal.errores.add(new Token("NAME", "ERROR SINTACTICO - BOTON - PARAMETRO TEXTO OBLIGATORIO OMITIDO", 0, 0));
     } 
+
+    private void agregarVariable(String a,Object b){
+        Principal.variables.add(new Variable(tipoDato, a, b));
+        switch(tipoDato){
+            case "cadena":
+                Principal.txtVariables.append("|\t" + a + "\t|\t" + b.toString() + "\t|\t" + tipoDato + "\t|\n");
+                break;
+            case "decimal":
+                Principal.txtVariables.append("|\t" + a + "\t|\t" + truncateDecimal((Double)b, 3) + "\t|\t" + tipoDato + "\t|\n");
+                break;
+            case "entero":
+                Principal.txtVariables.append("|\t" + a + "\t|\t" + (Integer)b + "\t|\t" + tipoDato + "\t|\n");
+                break;
+            case "booleano":
+                Principal.txtVariables.append("|\t" + a + "\t|\t" + Boolean.valueOf(b.toString()) + "\t|\t" + tipoDato + "\t|\n");
+                break;
+        }
+        tipoDato = "";
+    }
+
+    private BigDecimal truncateDecimal(double x, int decimales){
+        if ( x > 0) {
+            return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_FLOOR);
+        } else {
+            return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_CEILING);
+        }
+    }
 :}
 
 terminal String aceptacion, mayorQue, menorQue, barra, igual;
-terminal String compi, cabecera, cuerpo, titulo, fondo, espacio, parrafo, alineacion, tipoAlineacion, salto, textoA, textoB;
-terminal String imagen, path, alto, ancho, boton, texto, id;
-terminal String textoEntreEtiquetas, textoEntreComillas, numero;
+terminal String compi, cabecera, cuerpo, titulo, fondo, espacio, parrafo, alineacion, tipoAlineacion, salto, textoA, textoB, tabla, fila, columna, columnaC;
+terminal String imagen, path, alto, ancho, boton, texto, id, borde;
+terminal String textoEntreEtiquetas, textoEntreComillas, numero, booleano, parentesisAbre, parentesisCierra, punto, interrogacion;
+terminal String inicioHS, finHS, dolar, puntoYComa, mas, menos, multiplicacion, division, identificador, repetir, controlIf, controlElse, llaveAbre, llaveCierra;
+terminal String igualIgual, menorIgual, mayorIgual, noIgual, and, or, not;
+terminal String entero;
+terminal String decimal;
 
-non terminal A, B, C, D, F, G, I, I1, I2, J, K, M, N, O0, O1, O, P0, P1, P;
+non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1;
 non terminal String E, H, L;
+non terminal Object V, V1, V2;
+
+precedence left mas, menos;
+precedence left multiplicacion, division;
+precedence left parentesisAbre, parentesisCierra;
 
 start with A;
 
 A::= menorQue compi mayorQue B menorQue barra compi mayorQue aceptacion
+    {:
+        Principal.archivoHTML.finalizarPagina();
+    :}
+    |menorQue compi mayorQue menorQue barra compi mayorQue aceptacion
     {:
         Principal.archivoHTML.finalizarPagina();
     :}
@@ -58,6 +100,15 @@ C::= menorQue cabecera mayorQue D menorQue barra cabecera mayorQue
         Principal.archivoHTML.finalizarHead();
     :}
     |menorQue cuerpo F I1 menorQue barra cuerpo mayorQue
+    {:
+        Principal.archivoHTML.finalizarBody();
+    :}
+    |menorQue cabecera mayorQue menorQue barra cabecera mayorQue
+    {:
+        Principal.archivoHTML.iniciarHead();
+        Principal.archivoHTML.finalizarHead();
+    :}
+    |menorQue cuerpo F menorQue barra cuerpo mayorQue
     {:
         Principal.archivoHTML.finalizarBody();
     :}
@@ -112,39 +163,48 @@ H::= fondo igual textoEntreComillas:a
     :}
 ;
 
-I::= menorQue I2 mayorQue I1 menorQue barra espacio mayorQue
+I::= menorQue I2 I3 menorQue barra espacio
     {:
         Principal.archivoHTML.finalizarDiv();  
     :}
-    |menorQue parrafo J barra parrafo mayorQue
+    |menorQue I2 I3 barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue parrafo J barra parrafo 
     {:
         Principal.archivoHTML.finalizarParrafo();  
     :}
-    |menorQue barra salto mayorQue
+    |menorQue barra salto
     {:
         Principal.archivoHTML.agreagarSalto("<br>");
     :}
-    |menorQue textoA M barra textoA mayorQue
+    |menorQue textoA M barra textoA 
     {:
         Principal.archivoHTML.finalizarH1();  
     :}
-    |menorQue textoB N barra textoB mayorQue
+    |menorQue textoB N barra textoB 
     {:
         Principal.archivoHTML.finalizarH2();  
     :}
-    |menorQue O0 O mayorQue menorQue barra imagen mayorQue
+    |menorQue O0 O mayorQue menorQue barra imagen 
     {:
         verificarParametrosImagen();
         pathImagen = false;
         Principal.archivoHTML.finalizarImagen();  
     :}
-    |menorQue P0 P mayorQue menorQue barra boton mayorQue
+    |menorQue P0 P mayorQue menorQue barra boton 
     {:
         verificarParametrosBoton();
         botonId = false;
         botonTexto = false;
         Principal.archivoHTML.finalizarBoton();  
     :}
+    |menorQue Q0 Q R0 R menorQue barra tabla 
+    {:
+        Principal.archivoHTML.finalizarTabla();  
+    :}
+    |menorQue inicioHS U finHS
 ;
 
 I1::= I1 I 
@@ -154,6 +214,98 @@ I1::= I1 I
 I2::= espacio
     {:
         Principal.archivoHTML.iniciarDiv();  
+    :}
+;
+
+I3::= I3 I4  
+    |I4
+;
+
+I4::= menorQue I2 I3 menorQue barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue I2 I3 barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue parrafo J barra parrafo 
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |menorQue barra salto 
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |menorQue textoA M barra textoA 
+    {:
+        Principal.archivoHTML.finalizarH1();  
+    :}
+    |menorQue textoB N barra textoB 
+    {:
+        Principal.archivoHTML.finalizarH2();  
+    :}
+    |menorQue O0 O mayorQue menorQue barra imagen 
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |menorQue P0 P mayorQue menorQue barra boton 
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+    |textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.agregarTextoEntreEtiquetas(a);  
+    :}
+    |I2 I3 menorQue barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |I2 I3 barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |parrafo J barra parrafo 
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |barra salto 
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |textoA M barra textoA
+    {:
+        Principal.archivoHTML.finalizarH1();  
+    :}
+    |textoB N barra textoB 
+    {:
+        Principal.archivoHTML.finalizarH2();  
+    :}
+    |O0 O mayorQue menorQue barra imagen 
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |P0 P mayorQue menorQue barra boton 
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+    |menorQue Q0 Q R0 R menorQue barra tabla 
+    {:
+        Principal.archivoHTML.finalizarTabla();  
+    :}
+    |Q0 Q R0 R menorQue barra tabla 
+    {:
+        Principal.archivoHTML.finalizarTabla();  
     :}
 ;
 
@@ -271,4 +423,253 @@ P1::= id igual textoEntreComillas:a
         botonTexto = true;
         Principal.archivoHTML.agregarTexto(a);  
     :}
+;
+
+Q0::= tabla
+    {:
+        Principal.archivoHTML.iniciarTabla();
+    :}
+;
+
+Q::= Q Q1
+    |Q1
+;
+
+Q1::= borde igual booleano:a
+    {:
+        Principal.archivoHTML.agregarBorde(a);
+    :}
+;
+
+R0::= mayorQue
+    {:
+        Principal.archivoHTML.cerrarEtiquetaTabla();
+    :}
+;
+
+R::= R R1
+    |R1
+;
+
+R1::= menorQue R2 mayorQue S menorQue barra fila mayorQue
+    {:
+        Principal.archivoHTML.finalizarFila();  
+    :}
+;
+
+R2::= fila
+    {:
+        Principal.archivoHTML.iniciarFila();
+    :}
+;
+
+S::= S S1
+    |S1
+;
+
+S1::= menorQue T3 T barra columnaC
+    {:
+        Principal.archivoHTML.finalizarColumnaC();
+    :}
+    |menorQue T0 T barra columna
+    {:
+        Principal.archivoHTML.finalizarColumna();
+    :}
+    |menorQue T3 T menorQue barra columnaC
+    {:
+        Principal.archivoHTML.finalizarColumnaC();
+    :}
+    |menorQue T0 T menorQue barra columna
+    {:
+        Principal.archivoHTML.finalizarColumna();
+    :}
+;
+
+T0::= columna
+    {:
+        Principal.archivoHTML.iniciarColumna();
+    :}
+;
+
+T3::= columnaC
+    {:
+        Principal.archivoHTML.iniciarColumnaC();
+    :}
+;
+
+T::= T T1
+    |T1
+;
+
+T1::= textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.agregarTextoEntreEtiquetas(a);  
+    :} 
+    |menorQue barra salto 
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |barra salto 
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |menorQue parrafo J barra parrafo 
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |parrafo J barra parrafo 
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |menorQue O0 O mayorQue menorQue barra imagen 
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |O0 O mayorQue menorQue barra imagen 
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |menorQue P0 P mayorQue menorQue barra boton 
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+    |P0 P mayorQue menorQue barra boton 
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+;
+
+U::= U U1
+    |U1
+;
+
+U1::= dolar identificador:a igual V:b puntoYComa
+    {:
+        agregarVariable(a,b);
+    :}
+;
+
+V::= textoEntreComillas:a
+    {:
+        tipoDato = "cadena";
+        RESULT = a;
+    :}
+    |V1:a
+        {:
+            if(a instanceof Double){
+                tipoDato = "decimal";
+            }else if(a instanceof Integer){
+                tipoDato = "entero";
+            }
+            RESULT = a;
+        :}
+    |booleano:a
+    {:
+        tipoDato = "booleano";
+        RESULT = a;
+    :}
+;
+
+V1::= V2:a
+    {:
+        RESULT = a;
+    :}
+;
+
+V2::= V2:a mas V2:b   
+        {:
+            try{
+                if(a instanceof Double){
+                    if(b instanceof Integer)
+                        RESULT = (Double)a+(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Double)a+(Double)b;
+                }else if(a instanceof Integer){ 
+                    if(b instanceof Integer)
+                        RESULT = (Integer)a+(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Integer)a+(Double)b;
+                }   
+            }catch(Exception ex){System.out.println("Error al realizar division");}
+        :} 
+    |V2:a menos V2:b
+        {:
+            try{
+                if(a instanceof Double){
+                    if(b instanceof Integer)
+                        RESULT = (Double)a-(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Double)a-(Double)b;
+                }else if(a instanceof Integer){ 
+                    if(b instanceof Integer)
+                        RESULT = (Integer)a-(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Integer)a-(Double)b;
+                }   
+            }catch(Exception ex){System.out.println("Error al realizar division");}
+        :}
+    |V2:a multiplicacion V2:b
+        {:
+            try{
+                if(a instanceof Double){
+                    if(b instanceof Integer)
+                        RESULT = (Double)a*(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Double)a*(Double)b;
+                }else if(a instanceof Integer){ 
+                    if(b instanceof Integer)
+                        RESULT = (Integer)a*(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Integer)a*(Double)b;
+                }   
+            }catch(Exception ex){System.out.println("Error al realizar division");}
+        :}
+    |V2:a division V2:b
+        {:
+            try{
+                if(a instanceof Double){
+                    if(b instanceof Integer)
+                        RESULT = (Double)a/(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Double)a/(Double)b;
+                }else if(a instanceof Integer){ 
+                    if(b instanceof Integer)
+                        RESULT = (Integer)a/(Integer)b;
+                    else if(b instanceof Double)
+                        RESULT = (Integer)a/(Double)b;
+                }   
+            }catch(Exception ex){System.out.println("Error al realizar division");}
+        :}
+    |parentesisAbre V2:a parentesisCierra
+        {:
+            RESULT = a;
+        :}
+    |entero:a
+        {:
+            try{
+                RESULT = Integer.parseInt(a);
+            }catch(Exception ex){
+                System.out.println("Error al detectar valor numerico en variable int");
+                RESULT = 0;
+            }
+        :}
+    |decimal:a
+        {:
+            try{
+                RESULT = Double.parseDouble(a);
+            }catch(Exception ex){
+                System.out.println("Error al detectar valor numerico en variable double");
+                RESULT = 0;
+            }
+        :}
 ;

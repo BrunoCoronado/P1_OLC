@@ -66,29 +66,29 @@ identificador = [a-z] ([a-z] | [0-9] | "_")*
     "cuerpo"                { addToken(yytext(), "Palabra Reservada cuerpo"); return new Symbol(sym.cuerpo , yyline , yychar , yytext()); }
     "espacio"               { addToken(yytext(), "Palabra Reservada espacio"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "parrafo"               { addToken(yytext(), "Palabra Reservada parrafo"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"salto"                 { addToken(yytext(), "Palabra Reservada salto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"textoa"                { addToken(yytext(), "Palabra Reservada textoa"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"textob"                { addToken(yytext(), "Palabra Reservada textob"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"imagen"                { addToken(yytext(), "Palabra Reservada imagen");  /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"boton"                 { addToken(yytext(), "Palabra Reservada boton"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"tabla"                 { addToken(yytext(), "Palabra Reservada tabla"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"fila"                  { addToken(yytext(), "Palabra Reservada fila"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"columnac"              { addToken(yytext(), "Palabra Reservada columnac"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"columna"               { addToken(yytext(), "Palabra Reservada columna"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "salto"                 { addToken(yytext(), "Palabra Reservada salto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "textoa"                { addToken(yytext(), "Palabra Reservada textoa"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "textob"                { addToken(yytext(), "Palabra Reservada textob"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "imagen"                { addToken(yytext(), "Palabra Reservada imagen");  /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "boton"                 { addToken(yytext(), "Palabra Reservada boton"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "tabla"                 { addToken(yytext(), "Palabra Reservada tabla"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "fila"                  { addToken(yytext(), "Palabra Reservada fila"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "columnac"              { addToken(yytext(), "Palabra Reservada columnac"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "columna"               { addToken(yytext(), "Palabra Reservada columna"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     //"fondo"                 { addToken(yytext(), "Palabra Reservada fondo"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "alineacion"            { addToken(yytext(), "Palabra Reservada alineacion");/*return new Symbol(sym. , yyline , yychar , yytext());*/ }    
     "izquierda"             { addToken(yytext(), "Palabra Reservada izquierda"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "derecha"               { addToken(yytext(), "Palabra Reservada derecha"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "centrado"              { addToken(yytext(), "Palabra Reservada centrado"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
     "justificado"           { addToken(yytext(), "Palabra Reservada justificado"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }    
-    //"path"                  { addToken(yytext(), "Palabra Reservada path"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"alto"                  { addToken(yytext(), "Palabra Reservada alto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"ancho"                 { addToken(yytext(), "Palabra Reservada ancho"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"id"                    { addToken(yytext(), "Palabra Reservada id"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"texto"                 { addToken(yytext(), "Palabra Reservada texto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"borde"                 { addToken(yytext(), "Palabra Reservada borde"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"true"                  { addToken(yytext(), "Palabra Reservada true"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
-    //"false"                 { addToken(yytext(), "Palabra Reservada false"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "path"                  { addToken(yytext(), "Palabra Reservada path"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "alto"                  { addToken(yytext(), "Palabra Reservada alto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    /ancho"                 { addToken(yytext(), "Palabra Reservada ancho"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "id"                    { addToken(yytext(), "Palabra Reservada id"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "texto"                 { addToken(yytext(), "Palabra Reservada texto"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "borde"                 { addToken(yytext(), "Palabra Reservada borde"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "true"                  { addToken(yytext(), "Palabra Reservada true"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
+    "false"                 { addToken(yytext(), "Palabra Reservada false"); /*return new Symbol(sym. , yyline , yychar , yytext());*/ }
 
     /*{textoEntreEtiquetas}   { addToken(yytext(), "cadena"); return new Symbol(sym.textoEntreEtiquetas , yyline , yychar , yytext()); }*/
     //{numero}                { addToken(yytext(), "numero"); /*return new Symbol(sym.numero , yyline , yychar , yytext());*/ }
@@ -233,3 +233,12 @@ identificador = [a-z] ([a-z] | [0-9] | "_")*
 .                           { addError(yytext(), "NO RECONOCIDO"); /*return new Symbol(sym.identificador , yyline , yychar , yytext()); */}
 
 
+I3 textoEntreComillas:a I4
+    {:
+        Principal.archivoHTML.agregarTextoEntreEtiquetas(a);
+    :}
+    |textoEntreComillas:a I4
+    {:
+        Principal.archivoHTML.agregarTextoEntreEtiquetas(a);
+    :}
+    |

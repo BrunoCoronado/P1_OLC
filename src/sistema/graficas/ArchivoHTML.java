@@ -140,6 +140,50 @@ public class ArchivoHTML {
         codigoHTML += " value=\""+texto+"\"";
     }
 
+    public void agregarTextoEntreEtiquetas(String texto){
+        codigoHTML += texto+"\n";
+    }
+
+    public void  iniciarTabla(){
+        codigoHTML += "<table style=\"width:100%\" ";
+    }
+
+    public void finalizarTabla(){
+        codigoHTML += "</table>\n";
+    }
+
+    public void agregarBorde(String valor){
+        codigoHTML += "border=\""+((valor.toLowerCase().equals("true"))?"1":"0")+"\"";
+    }
+
+    public void cerrarEtiquetaTabla(){
+        codigoHTML += ">\n";
+    }
+
+    public void iniciarFila(){
+        codigoHTML += "<tr>\n";
+    }
+
+    public void finalizarFila(){
+        codigoHTML += "</tr>\n";
+    }
+
+    public void iniciarColumnaC(){
+        codigoHTML += "<td><b>";
+    }
+
+    public void finalizarColumnaC(){
+        codigoHTML += "</b></td>\n";
+    }
+
+    public void iniciarColumna(){
+        codigoHTML += "<td>";
+    }
+
+    public void finalizarColumna(){
+        codigoHTML += "</td>\n";
+    }
+
     public void crearArchivo(){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("pagina.html", false));

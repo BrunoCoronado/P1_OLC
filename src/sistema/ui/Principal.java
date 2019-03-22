@@ -5,6 +5,7 @@ import sistema.administracion.AdministracionArchivos;
 import sistema.analisis.Parser;
 import sistema.analisis.Scanner;
 import sistema.bean.Token;
+import sistema.bean.Variable;
 import sistema.graficas.ArchivoHTML;
 import sistema.graficas.GraficaTokens;
 
@@ -23,7 +24,8 @@ public class Principal extends JFrame{
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
-	private JTextArea txtEditor, txtConsola, txtVariables;
+	private JTextArea txtEditor;
+	public static  JTextArea txtConsola, txtVariables;
 	private JComboBox<String> cmbReportes;
 	private JButton btnReportar;
 	private JFileChooser fileChooser;
@@ -32,6 +34,7 @@ public class Principal extends JFrame{
 
 	public static ArrayList<Token> tokens;
 	public static ArrayList<Token> errores;
+	public static ArrayList<Variable> variables;
 	public static ArchivoHTML archivoHTML = new ArchivoHTML();
 
 	public Principal(){
@@ -175,6 +178,7 @@ public class Principal extends JFrame{
 
 	private void compilar(ActionEvent evt){
 		try{
+			inicializarEstructuras();
 			StringReader strReader = new StringReader(txtEditor.getText()+ "~");
 			Scanner scanner = new Scanner(strReader);
 			Parser parser = new Parser(scanner);
@@ -185,9 +189,6 @@ public class Principal extends JFrame{
 			}
 			graficarTokens.graficarListaTokens();
 			archivoHTML.crearArchivo();
-			archivoHTML.limpiarCodigo();
-			errores =  new ArrayList<>();
-			tokens =  new ArrayList<>();
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -196,5 +197,8 @@ public class Principal extends JFrame{
 	private void inicializarEstructuras(){
 		tokens = new ArrayList<>();
 		errores = new ArrayList<>();
+		variables = new ArrayList<>();
+		archivoHTML.limpiarCodigo();
+		txtVariables.setText("");
 	}
 }
