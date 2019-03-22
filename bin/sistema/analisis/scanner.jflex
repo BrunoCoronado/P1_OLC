@@ -330,7 +330,7 @@ identificador = [a-z0-9_]+
 
 <ETIQUETA_HS>{
     "\""                            { string.setLength(0); yybegin(TEXTO_ENTRE_COMILLAS_HSCRIPT); }
-    "?>"                            { addToken(yytext(), "Palabra Reservada etiqueta final hs"); yybegin(YYINITIAL); return new Symbol(sym.finHS , yyline , yychar , yytext()); }
+    "?"                             { addToken(yytext(), "interrogacion"); yybegin(YYINITIAL); return new Symbol(sym.interrogacion , yyline , yychar , yytext()); }
     "$"                             { addToken(yytext(), "dolar"); return new Symbol(sym.dolar , yyline , yychar , yytext()); }
     "="                             { addToken(yytext(), "igual"); return new Symbol(sym.igual , yyline , yychar , yytext()); }
     ";"                             { addToken(yytext(), "punto y coma"); return new Symbol(sym.puntoYComa , yyline , yychar , yytext()); }
@@ -355,7 +355,7 @@ identificador = [a-z0-9_]+
 
     "true"                          { addToken(yytext(), "Palabra Reservada true"); return new Symbol(sym.booleano , yyline , yychar , yytext()); }
     "false"                         { addToken(yytext(), "Palabra Reservada false"); return new Symbol(sym.booleano , yyline , yychar , yytext()); }
-    "echo"                          { addToken(yytext(), "Palabra Reservada echo"); return new Symbol(sym.booleano , yyline , yychar , yytext()); }
+    "echo"                          { addToken(yytext(), "Palabra Reservada echo"); return new Symbol(sym.echo , yyline , yychar , yytext()); }
     "if"                            { addToken(yytext(), "Palabra Reservada if"); return new Symbol(sym.controlIf , yyline , yychar , yytext()); }
     "else"                          { addToken(yytext(), "Palabra Reservada else"); return new Symbol(sym.controlElse , yyline , yychar , yytext()); }
     "repetir"                       { addToken(yytext(), "Palabra Reservada repetir"); return new Symbol(sym.repetir , yyline , yychar , yytext()); }

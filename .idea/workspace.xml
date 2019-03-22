@@ -2,26 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6fdf48cc-6958-4902-93a6-740ea375e5cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sistema/bean/Variable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/Parser$CUP$Parser$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/Parser$CUP$Parser$actions.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/Parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/Scanner.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/Scanner.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/parser.cup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/prueba.cup" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/prueba.cup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/scanner.jflex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/analisis/sym.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/analisis/sym.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/sistema/graficas/ArchivoHTML.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/graficas/ArchivoHTML.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/sistema/ui/Principal.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/sistema/ui/Principal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/errores.html" beforeDir="false" afterPath="$PROJECT_DIR$/errores.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pagina.html" beforeDir="false" afterPath="$PROJECT_DIR$/pagina.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/Scanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/parser.cup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sistema/analisis/prueba.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/prueba.cup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/scanner.jflex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/analisis/sym.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/analisis/sym.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sistema/graficas/ArchivoHTML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/graficas/ArchivoHTML.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sistema/ui/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sistema/ui/Principal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tokens.html" beforeDir="false" afterPath="$PROJECT_DIR$/tokens.html" afterDir="false" />
     </list>
@@ -34,11 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sistema/ui/Principal.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="180" column="37" selection-start-line="180" selection-start-column="37" selection-end-line="180" selection-end-column="37" />
+            <state relative-caret-position="397">
+              <caret line="204" column="5" selection-start-line="197" selection-start-column="41" selection-end-line="204" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -66,20 +61,21 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Parser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3705">
-              <caret line="559" column="30" lean-forward="true" selection-start-line="559" selection-start-column="30" selection-end-line="559" selection-end-column="30" />
+            <state relative-caret-position="323">
+              <caret line="2141" column="8" selection-start-line="2141" selection-start-column="8" selection-end-line="2141" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#524#525#0" expanded="true" />
-                <element signature="e#548#549#0" expanded="true" />
-                <element signature="e#28038#28039#0" expanded="true" />
-                <element signature="e#28093#28094#0" expanded="true" />
-                <element signature="e#31099#31153#1" expanded="true" />
-                <element signature="e#31270#31271#0" expanded="true" />
-                <element signature="e#31300#31301#0" expanded="true" />
+                <element signature="e#452#483#0" expanded="true" />
+                <element signature="e#583#584#0" expanded="true" />
+                <element signature="e#607#608#0" expanded="true" />
+                <element signature="e#28838#28839#0" expanded="true" />
+                <element signature="e#28893#28894#0" expanded="true" />
+                <element signature="e#32265#32319#1" expanded="true" />
+                <element signature="e#32436#32437#0" expanded="true" />
+                <element signature="e#32466#32467#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -129,8 +125,27 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1049">
-              <caret line="1321" column="106" selection-start-line="1321" selection-start-column="106" selection-end-line="1321" selection-end-column="106" />
+            <state relative-caret-position="194">
+              <caret line="1276" column="114" selection-start-line="1276" selection-start-column="114" selection-end-line="1276" selection-end-column="114" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#27099#27100#0" expanded="true" />
+                <element signature="e#27168#27169#0" expanded="true" />
+                <element signature="e#27223#27224#0" expanded="true" />
+                <element signature="e#27293#27294#0" expanded="true" />
+                <element signature="e#27954#27955#0" expanded="true" />
+                <element signature="e#27982#27983#0" expanded="true" />
+                <element signature="e#31137#31138#0" expanded="true" />
+                <element signature="e#31168#31169#0" expanded="true" />
+                <element signature="e#31306#31307#0" expanded="true" />
+                <element signature="e#31341#31342#0" expanded="true" />
+                <element signature="e#31453#31454#0" expanded="true" />
+                <element signature="e#31530#31531#0" expanded="true" />
+                <element signature="e#31888#31889#0" expanded="true" />
+                <element signature="e#31930#31931#0" expanded="true" />
+                <element signature="e#32028#32029#0" expanded="true" />
+                <element signature="e#32068#32069#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,8 +153,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sistema/analisis/sym.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+            <state relative-caret-position="187">
+              <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -318,12 +333,12 @@
       <workItem from="1553111218983" duration="16512000" />
       <workItem from="1553186637909" duration="2535000" />
       <workItem from="1553214415883" duration="684000" />
-      <workItem from="1553220779228" duration="8763000" />
+      <workItem from="1553220779228" duration="11212000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84512000" />
+    <option name="totallyTimeSpent" value="86961000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
@@ -611,32 +626,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sistema/analisis/sym.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1049">
-          <caret line="1321" column="106" selection-start-line="1321" selection-start-column="106" selection-end-line="1321" selection-end-column="106" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Parser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3705">
-          <caret line="559" column="30" lean-forward="true" selection-start-line="559" selection-start-column="30" selection-end-line="559" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#524#525#0" expanded="true" />
-            <element signature="e#548#549#0" expanded="true" />
-            <element signature="e#28038#28039#0" expanded="true" />
-            <element signature="e#28093#28094#0" expanded="true" />
-            <element signature="e#31099#31153#1" expanded="true" />
-            <element signature="e#31270#31271#0" expanded="true" />
-            <element signature="e#31300#31301#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="187">
+          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -670,10 +661,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Scanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="1276" column="114" selection-start-line="1276" selection-start-column="114" selection-end-line="1276" selection-end-column="114" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#27099#27100#0" expanded="true" />
+            <element signature="e#27168#27169#0" expanded="true" />
+            <element signature="e#27223#27224#0" expanded="true" />
+            <element signature="e#27293#27294#0" expanded="true" />
+            <element signature="e#27954#27955#0" expanded="true" />
+            <element signature="e#27982#27983#0" expanded="true" />
+            <element signature="e#31137#31138#0" expanded="true" />
+            <element signature="e#31168#31169#0" expanded="true" />
+            <element signature="e#31306#31307#0" expanded="true" />
+            <element signature="e#31341#31342#0" expanded="true" />
+            <element signature="e#31453#31454#0" expanded="true" />
+            <element signature="e#31530#31531#0" expanded="true" />
+            <element signature="e#31888#31889#0" expanded="true" />
+            <element signature="e#31930#31931#0" expanded="true" />
+            <element signature="e#32028#32029#0" expanded="true" />
+            <element signature="e#32068#32069#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sistema/ui/Principal.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="180" column="37" selection-start-line="180" selection-start-column="37" selection-end-line="180" selection-end-column="37" />
+        <state relative-caret-position="397">
+          <caret line="204" column="5" selection-start-line="197" selection-start-column="41" selection-end-line="204" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sistema/analisis/Parser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="2141" column="8" selection-start-line="2141" selection-start-column="8" selection-end-line="2141" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#452#483#0" expanded="true" />
+            <element signature="e#583#584#0" expanded="true" />
+            <element signature="e#607#608#0" expanded="true" />
+            <element signature="e#28838#28839#0" expanded="true" />
+            <element signature="e#28893#28894#0" expanded="true" />
+            <element signature="e#32265#32319#1" expanded="true" />
+            <element signature="e#32436#32437#0" expanded="true" />
+            <element signature="e#32466#32467#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

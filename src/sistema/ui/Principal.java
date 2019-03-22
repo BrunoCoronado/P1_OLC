@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -200,5 +201,31 @@ public class Principal extends JFrame{
 		variables = new ArrayList<>();
 		archivoHTML.limpiarCodigo();
 		txtVariables.setText("");
+		txtConsola.setText("");
+	}
+
+	public static String retornarValorCadenaVariable(String identificador){
+		for (Variable var: variables) {
+			if(var.getIdentificador().equals(identificador)){
+				switch (var.getTipo()){
+					case "cadena":
+						return var.getValor().toString();
+					case "decimal":
+						return truncateDecimal((Double)var.getValor(), 3).toString();
+					case "entero":
+						return var.getValor().toString();
+					case "booleano":
+						return Boolean.valueOf(var.getValor().toString()).toString();
+				}
+			}
+		}
+		return "";
+	}
+
+	private static BigDecimal truncateDecimal(double x, int decimales){
+		if ( x > 0)
+			return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_FLOOR);
+		else
+			return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_CEILING);
 	}
 }

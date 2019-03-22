@@ -5,6 +5,8 @@ import sistema.bean.Token;
 import sistema.bean.Variable;
 import sistema.ui.Principal;
 
+import java.math.BigDecimal;
+
 parser code
 {:
     private boolean pathImagen = false;
@@ -66,18 +68,19 @@ terminal String aceptacion, mayorQue, menorQue, barra, igual;
 terminal String compi, cabecera, cuerpo, titulo, fondo, espacio, parrafo, alineacion, tipoAlineacion, salto, textoA, textoB, tabla, fila, columna, columnaC;
 terminal String imagen, path, alto, ancho, boton, texto, id, borde;
 terminal String textoEntreEtiquetas, textoEntreComillas, numero, booleano, parentesisAbre, parentesisCierra, punto, interrogacion;
-terminal String inicioHS, finHS, dolar, puntoYComa, mas, menos, multiplicacion, division, identificador, repetir, controlIf, controlElse, llaveAbre, llaveCierra;
-terminal String igualIgual, menorIgual, mayorIgual, noIgual, and, or, not;
+terminal String inicioHS, dolar, puntoYComa, mas, menos, multiplicacion, division, identificador, repetir, controlIf, controlElse, llaveAbre, llaveCierra;
+terminal String igualIgual, menorIgual, mayorIgual, noIgual, and, or, not, echo;
 terminal String entero;
 terminal String decimal;
 
 non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1;
-non terminal String E, H, L;
+non terminal String E, H, L, W, W1;
 non terminal Object V, V1, V2;
 
-precedence left mas, menos;
+precedence left mas, menos, punto;
 precedence left multiplicacion, division;
 precedence left parentesisAbre, parentesisCierra;
+
 
 start with A;
 
@@ -204,7 +207,7 @@ I::= menorQue I2 I3 menorQue barra espacio
     {:
         Principal.archivoHTML.finalizarTabla();  
     :}
-    |menorQue inicioHS U finHS
+    |menorQue inicioHS U interrogacion mayorQue
 ;
 
 I1::= I1 I 
@@ -557,6 +560,10 @@ U1::= dolar identificador:a igual V:b puntoYComa
     {:
         agregarVariable(a,b);
     :}
+    |echo W:a puntoYComa
+    {:
+        Principal.txtConsola.append(a+"\n");
+    :}
 ;
 
 V::= textoEntreComillas:a
@@ -672,4 +679,25 @@ V2::= V2:a mas V2:b
                 RESULT = 0;
             }
         :}
+;
+
+W::= W1:a
+    {:
+        RESULT = a;
+    :}
+;
+
+W1::= W1:a punto W1:b
+    {:
+        RESULT = a + b;
+    :}
+    |dolar identificador:a    
+    {:
+        RESULT = Principal.retornarValorCadenaVariable(a);
+    :}
+    |textoEntreComillas:a
+    {:
+        RESULT = a;
+    :}
+    
 ;
