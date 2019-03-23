@@ -3,6 +3,8 @@ package sistema.analisis;
 import java_cup.runtime.*;
 import sistema.bean.Token;
 import sistema.bean.Variable;
+import sistema.bean.Struct;
+import sistema.bean.struct.*;
 import sistema.ui.Principal;
 
 import java.math.BigDecimal;
@@ -13,6 +15,14 @@ parser code
     private boolean botonId = false;
     private boolean botonTexto = false;
     private String tipoDato = "";
+    private int tipoStruct = 0;
+    private StructParrafo structParrafo;
+    private StructTextoA structTextoA;
+    private StructTextoB structTextoB;
+    private StructImagen structImagen;
+    private StructTabla structTabla;
+    private StructBoton structBoton;
+    private String identificadorStruct;
 
     public void syntax_error(Symbol s){ 
         System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
@@ -46,12 +56,13 @@ parser code
                 Principal.txtVariables.append("|\t" + a + "\t|\t" + truncateDecimal((Double)b, 3) + "\t|\t" + tipoDato + "\t|\n");
                 break;
             case "entero":
-                Principal.txtVariables.append("|\t" + a + "\t|\t" + (Integer)b + "\t|\t" + tipoDato + "\t|\n");
+                Principal.txtVariables.append("|\t" + a + "\t|\t" + b.toString() + "\t|\t" + tipoDato + "\t|\n");
                 break;
             case "booleano":
                 Principal.txtVariables.append("|\t" + a + "\t|\t" + Boolean.valueOf(b.toString()) + "\t|\t" + tipoDato + "\t|\n");
                 break;
         }
+        Principal.txtVariables.append("\n\n");
         tipoDato = "";
     }
 
@@ -62,6 +73,18 @@ parser code
             return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_CEILING);
         }
     }
+
+    private Boolean verificarAlineacion(String parametro){
+        parametro = parametro.toLowerCase().replace("\"","");
+        switch(parametro){
+            case "izquierda": return true;
+            case "derecha": return true;
+            case "centrado": return true;
+            case "justificado": return true;
+        }
+        Principal.errores.add(new Token("ALINEACION", "ERROR SINTACTICO - CREAR PARRAFO - PARAMETRO ALINEACION NO PERMITIDO", 0, 0));
+        return false;
+    }
 :}
 
 terminal String aceptacion, mayorQue, menorQue, barra, igual;
@@ -69,15 +92,18 @@ terminal String compi, cabecera, cuerpo, titulo, fondo, espacio, parrafo, alinea
 terminal String imagen, path, alto, ancho, boton, texto, id, borde;
 terminal String textoEntreEtiquetas, textoEntreComillas, numero, booleano, parentesisAbre, parentesisCierra, punto, interrogacion;
 terminal String inicioHS, dolar, puntoYComa, mas, menos, multiplicacion, division, identificador, repetir, controlIf, controlElse, llaveAbre, llaveCierra;
-terminal String igualIgual, menorIgual, mayorIgual, noIgual, and, or, not, echo;
-terminal String entero;
-terminal String decimal;
+terminal String igualIgual, menorIgual, mayorIgual, noIgual, and, or, not, echo, coma;
+terminal String entero ,decimal, numeral,crearParrafo, setAlineacion, getAlineacion, setContenido, getContenido, insertar;
+terminal String crearTextoA, crearTextoB, crearImagen, getPath, setPath, getAlto, setAlto, getAncho, setAncho, crearTabla;
+terminal String setBorde, crearBoton, setTexto, getTexto, clickBoton, corcheteAbre, corcheteCierra;
 
-non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1;
-non terminal String E, H, L, W, W1;
-non terminal Object V, V1, V2;
+non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1, U2, Y;
+non terminal Z, AA, AB, AC, AD, AF, AE, AG, AI, AM;
+non terminal String E, H, L, W, W1, AJ, AK, AL;
+non terminal Integer X, X1, X2, X3, X4, X5, X6, X7;
+non terminal Object V, V1, V2, AH;
 
-precedence left mas, menos, punto;
+precedence left mas, menos, punto, coma;
 precedence left multiplicacion, division;
 precedence left parentesisAbre, parentesisCierra;
 
@@ -564,6 +590,68 @@ U1::= dolar identificador:a igual V:b puntoYComa
     {:
         Principal.txtConsola.append(a+"\n");
     :}
+    |numeral identificador:a igual X:b puntoYComa
+    {:
+        switch(b){
+            case 1: 
+                Principal.structs.add(new Struct("parrafo" ,a ,structParrafo));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructParrafo\t|\n");
+            break;
+            case 2: 
+                Principal.structs.add(new Struct("textoA" ,a ,structTextoA));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructTextoA\t|\n");
+            break;
+            case 3: 
+                Principal.structs.add(new Struct("textoB" ,a ,structTextoB));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructTextoB\t|\n");
+            break;
+            case 4: 
+                Principal.structs.add(new Struct("imagen" ,a ,structImagen));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructImagen\t|\n");
+            break;
+            case 5: 
+                Principal.structs.add(new Struct("tabla" ,a ,structTabla));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructTabla\t|\n");
+            break;
+            case 6: 
+                Principal.structs.add(new Struct("boton" ,a ,structBoton));
+                Principal.txtStructs.append("|\t" + a + "\t|\tstruct\t|\tstructTabla\t|\n");
+            break;
+        }
+        Principal.txtStructs.append("\n\n");
+    :}
+    |dolar identificador:a igual numeral U2 punto AH:b
+    {:
+        agregarVariable(a, b);
+        identificadorStruct = "";
+    :}
+    |numeral U2 punto AI 
+    |numeral U2 punto insertar parentesisAbre parentesisCierra puntoYComa
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                break;
+            case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                break;
+            case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                break;
+            case "imagen": ((StructImagen)struct.getValor()).insertar();
+                break;
+            case "tabla": ((StructTabla)struct.getValor()).insertar();
+                break;
+            case "boton": ((StructBoton)struct.getValor()).insertar();
+                break;
+            default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+;
+
+U2::= identificador:a
+    {:
+        identificadorStruct = a;
+    :}
 ;
 
 V::= textoEntreComillas:a
@@ -698,6 +786,463 @@ W1::= W1:a punto W1:b
     |textoEntreComillas:a
     {:
         RESULT = a;
+    :}   
+;
+
+X::= X1:a parentesisCierra
+    {:
+            RESULT = a;
     :}
-    
+;
+
+X1::= X2:a parentesisAbre Y
+    {:
+        RESULT = a;
+    :}
+    |X3:a parentesisAbre Z
+    {:
+        RESULT = a;
+    :}
+    |X4:a parentesisAbre AA
+    {:
+        RESULT = a;
+    :}
+    |X5:a parentesisAbre AB
+    {:
+        RESULT = a;
+    :}
+    |X6:a parentesisAbre AC
+    {:
+        RESULT = a;
+    :}
+    |X7:a parentesisAbre AD
+    {:
+        RESULT = a;
+    :}
+;
+
+X2::= crearParrafo
+    {:
+        structParrafo = new StructParrafo();
+        RESULT = 1;
+    :}
+;
+
+X3::= crearTextoA
+    {:
+        structTextoA = new StructTextoA();
+        RESULT = 2;
+    :}
+;
+
+X4::= crearTextoB
+    {:
+        structTextoB = new StructTextoB();
+        RESULT = 3;
+    :}
+;
+
+X5::= crearImagen
+    {:
+        structImagen = new StructImagen();
+        RESULT = 4;
+    :}
+;
+
+X6::=crearTabla 
+    {:
+        structTabla = new StructTabla();
+        RESULT = 5;
+    :}
+;
+
+X7::= crearBoton 
+    {:
+        structBoton = new StructBoton();
+        RESULT = 6;
+    :}
+;
+
+Y::= textoEntreComillas:a coma tipoAlineacion:b
+    {:
+        structParrafo = new StructParrafo(a,b);
+    :}
+    |textoEntreComillas:a coma dolar identificador:b
+    {:  
+        if(verificarAlineacion(b))
+            structParrafo = new StructParrafo(a,Principal.retornarValorCadenaVariable(b));
+    :}
+    |dolar identificador:a coma tipoAlineacion:b
+    {:
+        structParrafo = new StructParrafo(Principal.retornarValorCadenaVariable(a),b);
+    :}
+    |dolar identificador:a coma dolar identificador:b
+    {:
+        if(verificarAlineacion(b))
+            structParrafo = new StructParrafo(Principal.retornarValorCadenaVariable(a), Principal.retornarValorCadenaVariable(b));
+    :}
+    |textoEntreComillas:a
+    {:
+        structParrafo.setContenido(a);
+    :}
+    |dolar identificador:a
+    {:
+        structParrafo.setContenido(Principal.retornarValorCadenaVariable(a));
+    :}
+;
+
+Z::= textoEntreComillas:a
+    {:
+        structTextoA = new StructTextoA(a);
+    :}
+    |dolar identificador:a
+    {:
+        structTextoA.setContenido(Principal.retornarValorCadenaVariable(a));
+    :}
+;
+
+AA::= textoEntreComillas:a
+    {:
+        structTextoB = new StructTextoB(a);
+    :}
+    |dolar identificador:a
+    {:
+        structTextoB.setContenido(Principal.retornarValorCadenaVariable(a));
+    :}
+;
+
+AB::= textoEntreComillas:a
+    {:
+        structImagen = new StructImagen(a);
+    :}
+    |dolar identificador:a
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a));
+    :}
+    |textoEntreComillas:a coma dolar identificador:b
+    {:
+        structImagen = new StructImagen(a, Principal.retornarValorCadenaVariable(b));
+    :}
+    |textoEntreComillas:a coma V1:b
+    {:
+        structImagen = new StructImagen(a, b.toString());
+    :}
+    |dolar identificador:a coma dolar identificador:b
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), Principal.retornarValorCadenaVariable(b));
+    :}
+    |dolar identificador:a coma V1:b
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), b.toString());
+    :}
+    |textoEntreComillas:a coma dolar identificador:b coma dolar identificador:c
+    {:
+        structImagen = new StructImagen(a, Principal.retornarValorCadenaVariable(b), Principal.retornarValorCadenaVariable(c));
+    :}
+    |textoEntreComillas:a coma dolar identificador:b coma V1:c
+    {:
+        structImagen = new StructImagen(a, Principal.retornarValorCadenaVariable(b), c.toString());
+    :}
+    |textoEntreComillas:a coma V1:b coma dolar identificador:c
+    {:
+        structImagen = new StructImagen(a, b.toString(), Principal.retornarValorCadenaVariable(c));
+    :}
+    |textoEntreComillas:a coma V1:b coma V1:c
+    {:
+        structImagen = new StructImagen(a, b.toString(), c.toString());
+    :}
+    |dolar identificador:a coma dolar identificador:b coma dolar identificador:c
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), Principal.retornarValorCadenaVariable(b), Principal.retornarValorCadenaVariable(c));
+    :}
+    |dolar identificador:a coma dolar identificador:b coma V1:c
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), Principal.retornarValorCadenaVariable(b), c.toString());
+    :}
+    |dolar identificador:a coma V1:b coma dolar identificador:c
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), b.toString(), Principal.retornarValorCadenaVariable(c));
+    :}
+    |dolar identificador:a coma V1:b coma V1:c
+    {:  
+        structImagen = new StructImagen(Principal.retornarValorCadenaVariable(a), b.toString(), c.toString());
+    :}
+;
+
+AC::= AC coma AC
+    |AF AE corcheteCierra 
+    {:
+        structTabla.agregarFila();
+    :}
+;
+
+AD::= textoEntreComillas:a coma textoEntreComillas:b
+    {:
+        structBoton = new StructBoton(a,b);
+    :}
+    |textoEntreComillas:a coma dolar identificador:b
+    {:
+        structBoton = new StructBoton(a, Principal.retornarValorCadenaVariable(b));
+    :}
+    |dolar identificador:a coma textoEntreComillas:b
+    {:
+        structBoton = new StructBoton(Principal.retornarValorCadenaVariable(a), b);
+    :}
+    |dolar identificador:a coma dolar identificador:b
+    {:
+        structBoton = new StructBoton(Principal.retornarValorCadenaVariable(a), Principal.retornarValorCadenaVariable(b));
+    :}
+;
+
+AF::= corcheteAbre
+    {:
+        structTabla.crearFila();
+    :}
+;
+
+AE::= AE coma AE
+    |textoEntreComillas:a
+    {:
+        structTabla.agregarElementoAFila(a);
+    :}
+    |dolar identificador:a
+    {:
+        structTabla.agregarElementoAFila(Principal.retornarValorCadenaVariable(a));
+    :}
+    |booleano:a
+    {:
+        structTabla.agregarElementoAFila(a);
+    :}
+    |V1:a
+    {:
+        structTabla.agregarElementoAFila(a.toString());
+    :}
+;
+
+AH::= getContenido AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "parrafo": RESULT = ((StructParrafo)struct.getValor()).getContenido();
+                break;
+            case "textoA": RESULT = ((StructTextoA)struct.getValor()).getContenido();
+                break;
+            case "textoB": RESULT = ((StructTextoB)struct.getValor()).getContenido();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "cadena";
+    :}
+    |getAlineacion AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "parrafo": RESULT = ((StructParrafo)struct.getValor()).getAlineacion();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "cadena";
+    :}
+    |getPath AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "imagen": RESULT = ((StructImagen)struct.getValor()).getPath();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "cadena";
+    :}
+    |getAncho AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "imagen": RESULT = ((StructImagen)struct.getValor()).getAncho();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "entero";
+    :}
+    |getAlto AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "imagen": RESULT = ((StructImagen)struct.getValor()).getAlto();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "entero";
+    :}
+    |getTexto AM
+    {:
+        Struct struct = Principal.retornarStruct(identificadorStruct);
+        switch(struct.getTipo()){
+            case "boton": RESULT = ((StructBoton)struct.getValor()).getTexto();
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+        tipoDato = "cadena";
+    :}
+;
+
+AI::= setContenido parentesisAbre AJ:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "parrafo": 
+                StructParrafo strParrafo = (StructParrafo)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strParrafo.setContenido(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("parrafo", identificadorStruct, strParrafo));
+                identificadorStruct = "";
+                break;
+            case "textoA": 
+                StructTextoA strTextoA = (StructTextoA)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strTextoA.setContenido(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("textoA", identificadorStruct, strTextoA));
+                identificadorStruct = "";
+                break;
+            case "textoB": 
+                StructTextoB strTextoB = (StructTextoB)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strTextoB.setContenido(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("textoB", identificadorStruct, strTextoB));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setAlineacion parentesisAbre AJ:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "parrafo": 
+                StructParrafo strParrafo = (StructParrafo)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strParrafo.setAlineacion(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("parrafo", identificadorStruct, strParrafo));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setPath parentesisAbre AJ:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "imagen": 
+                StructImagen strImagen = (StructImagen)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strImagen.setPath(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("imagen", identificadorStruct, strImagen));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setAlto parentesisAbre AK:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "imagen": 
+                StructImagen strImagen = (StructImagen)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strImagen.setAlto(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("imagen", identificadorStruct, strImagen));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setAncho parentesisAbre AK:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "imagen": 
+                StructImagen strImagen = (StructImagen)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strImagen.setAncho(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("imagen", identificadorStruct, strImagen));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setBorde parentesisAbre AL:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "tabla": 
+                StructTabla strTabla = (StructTabla)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strTabla.setBorde(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("tabla", identificadorStruct, strTabla));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |setTexto parentesisAbre AJ:a parentesisCierra puntoYComa 
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "boton": 
+                StructBoton strBoton = (StructBoton)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strBoton.setTexto(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("boton", identificadorStruct, strBoton));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+    |clickBoton parentesisAbre AJ:a parentesisCierra puntoYComa
+    {:
+        switch(Principal.retornarStruct(identificadorStruct).getTipo()){
+            case "boton": 
+                StructBoton strBoton = (StructBoton)(Principal.structs.get(Principal.indiceStruct(identificadorStruct)).getValor());
+                strBoton.click(a);
+                Principal.structs.set(Principal.indiceStruct(identificadorStruct), new Struct("boton", identificadorStruct, strBoton));
+                identificadorStruct = "";
+                break;
+            default: Principal.errores.add(new Token("NO EXISTE FUNCION PARA ESTA ESTRUCTURA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                break;
+        }
+    :}
+;
+
+AJ::= textoEntreComillas:a
+    {:
+        RESULT = a;
+    :}
+    |dolar identificador:a
+    {:
+        RESULT = Principal.retornarValorCadenaVariable(a);
+    :}
+    |tipoAlineacion:a
+    {:
+        RESULT = a;
+    :}
+;
+
+AK::= dolar identificador:a
+    {:
+        RESULT = Principal.retornarValorCadenaVariable(a);
+    :}
+    |V1:a
+    {:
+        RESULT = a.toString();
+    :}
+;
+
+AL::= dolar identificador:a
+    {:
+        RESULT = Principal.retornarValorCadenaVariable(a);
+    :}
+    |booleano:a
+    {:
+        RESULT = a;
+    :}
+; 
+
+
+AM::= parentesisAbre parentesisCierra puntoYComa
 ;

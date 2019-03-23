@@ -56,7 +56,7 @@ ComentarioUnaLinea     = "//" {caracterDeEntrada}* {finDeLinea}?
 textoEntreEtiquetas = ">" [^<]* "<"
 numero = 0 | [1-9][0-9]*
 numeroDecimal = (0 | [1-9][0-9]*) "." (0 | [1-9][0-9]*)
-identificador = [a-z0-9_]+
+identificador = [aA-zZ][aA-zZ0-9_]*
 
 %state ETIQUETA_CON_TEXTO, TEXTO_ENTRE_COMILLAS, TEXTO_ENTRE_COMILLAS_BOTON, TEXTO_ENTRE_COMILLAS_IMAGEN 
 %state ETIQUETA_ESPECIAL, ETIQUETA_IMAGEN, ETIQUETA_BOTON, ETIQUETA_IMAGEN_CIERRE, ETIQUETA_BOTON_CIERRE
@@ -343,6 +343,8 @@ identificador = [a-z0-9_]+
     ")"                             { addToken(yytext(), "parentesis cierra"); return new Symbol(sym.parentesisCierra , yyline , yychar , yytext()); }
     "{"                             { addToken(yytext(), "llave abre"); return new Symbol(sym.llaveAbre , yyline , yychar , yytext()); }
     "}"                             { addToken(yytext(), "llave cierra"); return new Symbol(sym.llaveCierra , yyline , yychar , yytext()); }
+    "["                             { addToken(yytext(), "corchete abre"); return new Symbol(sym.corcheteAbre , yyline , yychar , yytext()); }
+    "]"                             { addToken(yytext(), "corchete cierra"); return new Symbol(sym.corcheteCierra , yyline , yychar , yytext()); }
     ">"                             { addToken(yytext(), "mayor que"); return new Symbol(sym.mayorQue , yyline , yychar , yytext()); }                     
     "<"                             { addToken(yytext(), "menor que"); return new Symbol(sym.menorQue , yyline , yychar , yytext()); }
     "=="                            { addToken(yytext(), "igual igual"); return new Symbol(sym.igualIgual , yyline , yychar , yytext()); }
@@ -352,6 +354,8 @@ identificador = [a-z0-9_]+
     "&&"                            { addToken(yytext(), "and"); return new Symbol(sym.and , yyline , yychar , yytext()); }
     "||"                            { addToken(yytext(), "or"); return new Symbol(sym.or , yyline , yychar , yytext()); }
     "!"                             { addToken(yytext(), "not"); return new Symbol(sym.not , yyline , yychar , yytext()); }
+    "#"                             { addToken(yytext(), "numeral"); return new Symbol(sym.numeral , yyline , yychar , yytext()); }
+    ","                             { addToken(yytext(), "coma"); return new Symbol(sym.coma , yyline , yychar , yytext()); }
 
     "true"                          { addToken(yytext(), "Palabra Reservada true"); return new Symbol(sym.booleano , yyline , yychar , yytext()); }
     "false"                         { addToken(yytext(), "Palabra Reservada false"); return new Symbol(sym.booleano , yyline , yychar , yytext()); }
@@ -359,6 +363,31 @@ identificador = [a-z0-9_]+
     "if"                            { addToken(yytext(), "Palabra Reservada if"); return new Symbol(sym.controlIf , yyline , yychar , yytext()); }
     "else"                          { addToken(yytext(), "Palabra Reservada else"); return new Symbol(sym.controlElse , yyline , yychar , yytext()); }
     "repetir"                       { addToken(yytext(), "Palabra Reservada repetir"); return new Symbol(sym.repetir , yyline , yychar , yytext()); }
+    "crearparrafo"                  { addToken(yytext(), "Funcion Nativa crearParrafo"); return new Symbol(sym.crearParrafo , yyline , yychar , yytext()); }
+    "setalineacion"                 { addToken(yytext(), "Funcion Nativa setAlineacion"); return new Symbol(sym.setAlineacion , yyline , yychar , yytext()); }
+    "getalineacion"                 { addToken(yytext(), "Funcion Nativa getAlineacion"); return new Symbol(sym.getAlineacion , yyline , yychar , yytext()); } 
+    "setcontenido"                  { addToken(yytext(), "Funcion Nativa setContenido"); return new Symbol(sym.setContenido , yyline , yychar , yytext()); }
+    "getcontenido"                  { addToken(yytext(), "Funcion Nativa getContenido"); return new Symbol(sym.getContenido , yyline , yychar , yytext()); }
+    "creartextoa"                   { addToken(yytext(), "Funcion Nativa crearTextoA"); return new Symbol(sym.crearTextoA , yyline , yychar , yytext()); }
+    "creartextob"                   { addToken(yytext(), "Funcion Nativa crearTextoB"); return new Symbol(sym.crearTextoB , yyline , yychar , yytext()); }
+    "crearimagen"                   { addToken(yytext(), "Funcion Nativa crearImagen"); return new Symbol(sym.crearImagen , yyline , yychar , yytext()); }
+    "setpath"                       { addToken(yytext(), "Funcion Nativa setPath"); return new Symbol(sym.setPath , yyline , yychar , yytext()); }
+    "getpath"                       { addToken(yytext(), "Funcion Nativa getPath"); return new Symbol(sym.getPath , yyline , yychar , yytext()); }
+    "setalto"                       { addToken(yytext(), "Funcion Nativa setAlto"); return new Symbol(sym.setAlto , yyline , yychar , yytext()); }
+    "getalto"                       { addToken(yytext(), "Funcion Nativa getAlto"); return new Symbol(sym.getAlto , yyline , yychar , yytext()); }
+    "setancho"                      { addToken(yytext(), "Funcion Nativa setAncho"); return new Symbol(sym.setAncho , yyline , yychar , yytext()); }
+    "getancho"                      { addToken(yytext(), "Funcion Nativa getAncho"); return new Symbol(sym.getAncho , yyline , yychar , yytext()); }
+    "creartabla"                    { addToken(yytext(), "Funcion Nativa crearTabla"); return new Symbol(sym.crearTabla , yyline , yychar , yytext()); }
+    "setborde"                      { addToken(yytext(), "Funcion Nativa setBorde"); return new Symbol(sym.setBorde , yyline , yychar , yytext()); }
+    "crearboton"                    { addToken(yytext(), "Funcion Nativa crearBoton"); return new Symbol(sym.crearBoton , yyline , yychar , yytext()); }
+    "settexto"                      { addToken(yytext(), "Funcion Nativa setTexto"); return new Symbol(sym.setTexto , yyline , yychar , yytext()); }
+    "gettexto"                      { addToken(yytext(), "Funcion Nativa getTexto"); return new Symbol(sym.getTexto , yyline , yychar , yytext()); }
+    "clickboton"                    { addToken(yytext(), "Funcion Nativa clickBoton"); return new Symbol(sym.clickBoton , yyline , yychar , yytext()); }
+    "insertar"                      { addToken(yytext(), "Funcion Nativa insertar"); return new Symbol(sym.insertar , yyline , yychar , yytext()); }
+    "\"izquierda\""                 { addToken(yytext(), "Palabra Reservada izquierda"); return new Symbol(sym.tipoAlineacion , yyline , yychar , yytext()); }
+    "\"derecha"\"                   { addToken(yytext(), "Palabra Reservada derecha"); return new Symbol(sym.tipoAlineacion , yyline , yychar , yytext()); }
+    "\"centrado"\"                  { addToken(yytext(), "Palabra Reservada centrado"); return new Symbol(sym.tipoAlineacion , yyline , yychar , yytext()); }
+    "\"justificado"\"               { addToken(yytext(), "Palabra Reservada justificado"); return new Symbol(sym.tipoAlineacion , yyline , yychar , yytext()); }    
 
     {numero}                        { addToken(yytext(), "numero entero"); return new Symbol(sym.entero , yyline , yychar , yytext()); }
     {numeroDecimal}                 { addToken(yytext(), "numero decimal"); return new Symbol(sym.decimal , yyline , yychar , yytext()); }

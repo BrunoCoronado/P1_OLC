@@ -206,7 +206,15 @@ public class ArchivoHTML {
                 return  "\"center\"";
             case "\"justificado\"":
                 return  "\"justify\"";
+            default: return  "\"justify\"";
         }
-        return "";
+    }
+
+    public String getCodigoHTML() {
+        return codigoHTML;
+    }
+
+    public void setCodigoHTML(String codigoHTML) {
+        ArchivoHTML.codigoHTML = codigoHTML;
     }
 }

@@ -4,8 +4,10 @@ import main.Main;
 import sistema.administracion.AdministracionArchivos;
 import sistema.analisis.Parser;
 import sistema.analisis.Scanner;
+import sistema.bean.Struct;
 import sistema.bean.Token;
 import sistema.bean.Variable;
+import sistema.bean.struct.*;
 import sistema.graficas.ArchivoHTML;
 import sistema.graficas.GraficaTokens;
 
@@ -26,7 +28,7 @@ public class Principal extends JFrame{
 	private JMenu menu;
 	private JMenuItem menuItem;
 	private JTextArea txtEditor;
-	public static  JTextArea txtConsola, txtVariables;
+	public static  JTextArea txtConsola, txtVariables, txtStructs;
 	private JComboBox<String> cmbReportes;
 	private JButton btnReportar;
 	private JFileChooser fileChooser;
@@ -37,6 +39,8 @@ public class Principal extends JFrame{
 	public static ArrayList<Token> errores;
 	public static ArrayList<Variable> variables;
 	public static ArchivoHTML archivoHTML = new ArchivoHTML();
+	public static ArrayList<Struct> structs;
+
 
 	public Principal(){
 		iniciarComponentes();
@@ -96,6 +100,7 @@ public class Principal extends JFrame{
 		JPanel panelResultados = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel panelConsola = new JPanel(new BorderLayout());
 		JPanel panelVariables = new JPanel(new BorderLayout());
+		JPanel panelStructs = new JPanel(new BorderLayout());
 		txtEditor = new JTextArea();//apartado para el editor
 		JScrollPane scrollEditor = new JScrollPane(txtEditor);
 		scrollEditor.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -120,6 +125,12 @@ public class Principal extends JFrame{
 		JScrollPane scrollVariables = new JScrollPane(txtVariables);
 		scrollVariables.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panelVariables.add(scrollVariables, BorderLayout.CENTER);
+		txtStructs = new JTextArea();//apartado para los structs
+		txtStructs.setEditable(false);
+		txtStructs.setRows(15);
+		JScrollPane scrollStructs = new JScrollPane(txtStructs);
+		scrollStructs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		panelStructs.add(scrollStructs, BorderLayout.CENTER);
 		//creacion de los Tabbed Pane
 		JTabbedPane tabbedPaneEditor = new JTabbedPane();
 		tabbedPaneEditor.add("Edición", panelEdicion);
@@ -127,6 +138,7 @@ public class Principal extends JFrame{
 		JTabbedPane tabbedPaneSalida = new JTabbedPane();
 		tabbedPaneSalida.add("Consola", panelConsola);
 		tabbedPaneSalida.add("Variables", panelVariables);
+		tabbedPaneSalida.add("Structs", panelStructs);
 		this.add(tabbedPaneEditor, BorderLayout.CENTER);
 		this.add(tabbedPaneSalida, BorderLayout.SOUTH);
 	}
@@ -200,8 +212,10 @@ public class Principal extends JFrame{
 		errores = new ArrayList<>();
 		variables = new ArrayList<>();
 		archivoHTML.limpiarCodigo();
+		structs= new ArrayList<>();
 		txtVariables.setText("");
 		txtConsola.setText("");
+		txtStructs.setText("");
 	}
 
 	public static String retornarValorCadenaVariable(String identificador){
@@ -219,6 +233,7 @@ public class Principal extends JFrame{
 				}
 			}
 		}
+		Principal.errores.add(new Token(identificador, "ERROR SINTACTICO - NO ENCONTRADO",0,0));
 		return "";
 	}
 
@@ -227,5 +242,22 @@ public class Principal extends JFrame{
 			return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_FLOOR);
 		else
 			return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_CEILING);
+	}
+
+	public static Struct retornarStruct(String identificador){
+		for (Struct struct : structs) {
+			if(struct.getIdentificador().equals(identificador))
+				return struct;
+		}
+		Principal.errores.add(new Token(identificador, "ERROR SINTACTICO - NO ENCONTRADO",0,0));
+		return null;
+	}
+
+	public static int indiceStruct(String identificador){
+		for (int i = 0; i < structs.size(); i++) {
+			if(structs.get(i).getIdentificador().equals(identificador))
+				return i;
+		}
+		return -1;
 	}
 }
