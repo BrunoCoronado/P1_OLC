@@ -28,7 +28,7 @@ public class Principal extends JFrame{
 	private JMenu menu;
 	private JMenuItem menuItem;
 	private JTextArea txtEditor;
-	public static  JTextArea txtConsola, txtVariables, txtStructs;
+	public static  JTextArea txtConsola, txtVariables, txtStructs, txtTextoPlano;
 	private JComboBox<String> cmbReportes;
 	private JButton btnReportar;
 	private JFileChooser fileChooser;
@@ -88,10 +88,19 @@ public class Principal extends JFrame{
 		menuBar.add(menu);
 		menu = new JMenu("Menú Ayuda");
 		menuItem = new JMenuItem("Manual de Usuario");
+		menuItem.addActionListener(e -> {
+			manualUsuario(e);
+		});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Manual Técnico");
+		menuItem.addActionListener(e -> {
+			manualTecnico(e);
+		});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Acerca de");
+		menuItem.addActionListener(e -> {
+			acercaDe(e);
+		});
 		menu.add(menuItem);
 		menuBar.add(menu);
 		this.setJMenuBar(menuBar);
@@ -107,10 +116,12 @@ public class Principal extends JFrame{
 		panelEdicion.add(scrollEditor, BorderLayout.CENTER);
 		cmbReportes = new JComboBox();//apartado para los resultados
 		cmbReportes.addItem("Página Web");
-		cmbReportes.addItem("Análsis Léxico");
-		cmbReportes.addItem("Errores Léxicos");
-		cmbReportes.addItem("Errores Sintácticos");
+		cmbReportes.addItem("Análsis Léxico (Reporte Tokens)");
+		cmbReportes.addItem("Errores Léxicos/Sintácticos");
 		btnReportar = new JButton("Ver Reporte en Navegador");
+		btnReportar.addActionListener(e -> {
+			verResultado(e);
+		});
 		panelResultados.add(cmbReportes);
 		panelResultados.add(btnReportar);
 		txtConsola = new JTextArea();//apartado para la consola
@@ -131,10 +142,18 @@ public class Principal extends JFrame{
 		JScrollPane scrollStructs = new JScrollPane(txtStructs);
 		scrollStructs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panelStructs.add(scrollStructs, BorderLayout.CENTER);
+		//seccion para ver el texto plano
+		JPanel panelTextoPlano = new JPanel(new BorderLayout());
+		txtTextoPlano = new JTextArea();
+		txtTextoPlano.setEditable(false);
+		JScrollPane scrollTextoPlano = new JScrollPane(txtTextoPlano);
+		scrollTextoPlano.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		panelTextoPlano.add(scrollTextoPlano, BorderLayout.CENTER);
 		//creacion de los Tabbed Pane
 		JTabbedPane tabbedPaneEditor = new JTabbedPane();
 		tabbedPaneEditor.add("Edición", panelEdicion);
 		tabbedPaneEditor.add("Resultados", panelResultados);
+		tabbedPaneEditor.add("Texto Plano", panelTextoPlano);
 		JTabbedPane tabbedPaneSalida = new JTabbedPane();
 		tabbedPaneSalida.add("Consola", panelConsola);
 		tabbedPaneSalida.add("Variables", panelVariables);
@@ -148,6 +167,7 @@ public class Principal extends JFrame{
 			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
 				this.setTitle(fileChooser.getSelectedFile().getPath());
 				administracionArchivos.nuevoArchivo(fileChooser.getSelectedFile().getPath()+".uweb");
+				txtEditor.setText("");
 			}
 		}catch (Exception ex){
 			System.err.println("ERROR AL CREAR ARCHIVO");
@@ -191,20 +211,73 @@ public class Principal extends JFrame{
 
 	private void compilar(ActionEvent evt){
 		try{
+			archivoHTML.limpiarCodigo();
 			inicializarEstructuras();
 			StringReader strReader = new StringReader(txtEditor.getText()+ "~");
 			Scanner scanner = new Scanner(strReader);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			GraficaTokens graficarTokens = new GraficaTokens();
-			if(errores.size() > 0){
-				graficarTokens.graficarListaErrores();
-			}
-			graficarTokens.graficarListaTokens();
-			archivoHTML.crearArchivo();
+			if(errores.size() > 0)
+				JOptionPane.showMessageDialog(this, "SE ENCONTRARON " + errores.size() + " ERRORES", "ERROR", JOptionPane.ERROR_MESSAGE);
+			txtTextoPlano.setText(archivoHTML.getCodigoHTML());
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
+	}
+
+	private void verResultado(ActionEvent evt){
+		switch (cmbReportes.getSelectedIndex()){
+			case 0:
+				if(!archivoHTML.getCodigoHTML().equals("<!DOCTYPE html>\n<html>\n")){
+					if(errores.size() > 0)
+						JOptionPane.showMessageDialog(this, "SE ENCONTRARON ERRORES", "ERROR", JOptionPane.ERROR_MESSAGE);
+					else
+						archivoHTML.crearArchivo();
+
+				}else
+					JOptionPane.showMessageDialog(this, "NO EXISTE CONTENIDO HTML", "ERROR", JOptionPane.WARNING_MESSAGE);
+				break;
+			case 1:
+				if(tokens.size() > 0){
+					if(errores.size() > 0)
+						JOptionPane.showMessageDialog(this, "SE ENCONTRARON ERRORES", "ERROR", JOptionPane.ERROR_MESSAGE);
+					else{
+						GraficaTokens graficarTokens = new GraficaTokens();
+						graficarTokens.graficarListaTokens();
+					}
+				}else
+					JOptionPane.showMessageDialog(this, "NO EXISTE CONTENIDO", "ERROR", JOptionPane.WARNING_MESSAGE);
+				break;
+			case 2:
+					if(errores.size() > 0) {
+						GraficaTokens graficarTokens = new GraficaTokens();
+						graficarTokens.graficarListaErrores();
+					}else
+						JOptionPane.showMessageDialog(this, "NO EXISTE CONTENIDO", "ERROR", JOptionPane.WARNING_MESSAGE);
+				break;
+		}
+	}
+
+	private void manualUsuario(ActionEvent evt){
+		try {
+			String [] comando = {"bash","xdg-open", "manualUsuario.pdf" };
+			Runtime.getRuntime().exec(comando);
+		} catch (Exception ex) {
+			System.out.println("Error abriendo manual");
+		}
+	}
+
+	private void manualTecnico(ActionEvent evt){
+		try {
+			String [] comando = {"bash","xdg-open", "manualTecnico.pdf" };
+			Runtime.getRuntime().exec(comando);
+		} catch (Exception ex) {
+			System.out.println("Error abriendo manual");
+		}
+	}
+
+	private void acercaDe(ActionEvent evt){
+		JOptionPane.showMessageDialog(this, " Bruno Coronado \n 201709362 \n OLC1 \n USAC", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private void inicializarEstructuras(){
@@ -237,6 +310,15 @@ public class Principal extends JFrame{
 		return "";
 	}
 
+	public static  Variable retornarVariable(String identificador){
+		for (Variable var: variables) {
+			if(var.getIdentificador().equals(identificador))
+				return  var;
+		}
+		Principal.errores.add(new Token(identificador, "ERROR SINTACTICO - NO ENCONTRADO",0,0));
+		return null;
+	}
+
 	private static BigDecimal truncateDecimal(double x, int decimales){
 		if ( x > 0)
 			return new BigDecimal(String.valueOf(x)).setScale(decimales, BigDecimal.ROUND_FLOOR);
@@ -259,5 +341,15 @@ public class Principal extends JFrame{
 				return i;
 		}
 		return -1;
+	}
+
+	public static int actualizarVariable(String identificador, Object valor){
+		for (int i = 0; i < variables.size(); i++) {
+			if(variables.get(i).getIdentificador().equals(identificador)){
+				variables.get(i).setValor(valor);
+				return 1;
+			}
+		}
+		return 0;
 	}
 }

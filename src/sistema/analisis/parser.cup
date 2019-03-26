@@ -6,6 +6,7 @@ import sistema.bean.Variable;
 import sistema.bean.Struct;
 import sistema.bean.struct.*;
 import sistema.ui.Principal;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
 
@@ -23,6 +24,10 @@ parser code
     private StructTabla structTabla;
     private StructBoton structBoton;
     private String identificadorStruct;
+    private ArrayList<Integer> repetidores = new ArrayList();
+    private int contadorRepetidor = -1;
+    private ArrayList<Boolean> condicionales = new ArrayList();
+    private int contadorIf = -1;
 
     public void syntax_error(Symbol s){ 
         System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
@@ -85,6 +90,11 @@ parser code
         Principal.errores.add(new Token("ALINEACION", "ERROR SINTACTICO - CREAR PARRAFO - PARAMETRO ALINEACION NO PERMITIDO", 0, 0));
         return false;
     }
+
+    private void anidarVariable(String identificador, Object nuevoValor){
+        if(Principal.actualizarVariable(identificador, nuevoValor) != 1)
+            Principal.errores.add(new Token("ERROR ANIDACION", "ERROR SINTACTICO - ANIDACION INVALIDA", 0, 0));
+    }
 :}
 
 terminal String aceptacion, mayorQue, menorQue, barra, igual;
@@ -97,12 +107,18 @@ terminal String entero ,decimal, numeral,crearParrafo, setAlineacion, getAlineac
 terminal String crearTextoA, crearTextoB, crearImagen, getPath, setPath, getAlto, setAlto, getAncho, setAncho, crearTabla;
 terminal String setBorde, crearBoton, setTexto, getTexto, clickBoton, corcheteAbre, corcheteCierra;
 
-non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1, U2, Y;
-non terminal Z, AA, AB, AC, AD, AF, AE, AG, AI, AM;
+non terminal A, B, C, D, F, G, I, I1, I2, I3, I4, J, K, M, N, O0, O1, O, P0, P1, P, Q, Q0, Q1, R, R0, R1, R2, S, S1, T, T0, T1, T3, U, U1, U2, U5, Y;
+non terminal Z, AA, AB, AC, AD, AF, AE, AI, AM, AN, AO, AO1, AP, AP1, AH1, AH2, AQ0, AQ00, AO10, AP10;
 non terminal String E, H, L, W, W1, AJ, AK, AL;
 non terminal Integer X, X1, X2, X3, X4, X5, X6, X7;
 non terminal Object V, V1, V2, AH;
+non terminal Boolean AR, AQ;
+non terminal Double AS;
 
+precedence left and;
+precedence left or;
+precedence left not;
+precedence left igualIgual, noIgual, menorQue, mayorQue, menorIgual, mayorIgual;
 precedence left mas, menos, punto, coma;
 precedence left multiplicacion, division;
 precedence left parentesisAbre, parentesisCierra;
@@ -233,7 +249,7 @@ I::= menorQue I2 I3 menorQue barra espacio
     {:
         Principal.archivoHTML.finalizarTabla();  
     :}
-    |menorQue inicioHS U interrogacion mayorQue
+    |menorQue inicioHS U interrogacion 
 ;
 
 I1::= I1 I 
@@ -241,6 +257,10 @@ I1::= I1 I
 ;
 
 I2::= espacio
+    {:
+        Principal.archivoHTML.iniciarDiv();  
+    :}
+    |espacio menorQue
     {:
         Principal.archivoHTML.iniciarDiv();  
     :}
@@ -287,6 +307,9 @@ I4::= menorQue I2 I3 menorQue barra espacio
         botonTexto = false;
         Principal.archivoHTML.finalizarBoton();  
     :}
+    |menorQue menorQue inicioHS U interrogacion
+    |menorQue inicioHS U interrogacion
+    |inicioHS U interrogacion
     |textoEntreEtiquetas:a
     {:
         Principal.archivoHTML.agregarTextoEntreEtiquetas(a);  
@@ -335,6 +358,47 @@ I4::= menorQue I2 I3 menorQue barra espacio
     |Q0 Q R0 R menorQue barra tabla 
     {:
         Principal.archivoHTML.finalizarTabla();  
+    :}
+    |menorQue menorQue I2 I3 menorQue barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue menorQue I2 I3 barra espacio
+    {:
+        Principal.archivoHTML.finalizarDiv();  
+    :}
+    |menorQue menorQue parrafo J barra parrafo 
+    {:
+        Principal.archivoHTML.finalizarParrafo();  
+    :}
+    |menorQue menorQue barra salto 
+    {:
+        Principal.archivoHTML.agreagarSalto("<br>");
+    :}
+    |menorQue menorQue textoA M barra textoA 
+    {:
+        Principal.archivoHTML.finalizarH1();  
+    :}
+    |menorQue menorQue textoB N barra textoB 
+    {:
+        Principal.archivoHTML.finalizarH2();  
+    :}
+    |menorQue menorQue O0 O mayorQue menorQue barra imagen 
+    {:
+        verificarParametrosImagen();
+        pathImagen = false;
+        Principal.archivoHTML.finalizarImagen();  
+    :}
+    |menorQue menorQue P0 P mayorQue menorQue barra boton 
+    {:
+        verificarParametrosBoton();
+        botonId = false;
+        botonTexto = false;
+        Principal.archivoHTML.finalizarBoton();  
+    :}
+    |menorQue textoEntreEtiquetas:a
+    {:
+        Principal.archivoHTML.agregarTextoEntreEtiquetas(a);  
     :}
 ;
 
@@ -576,6 +640,8 @@ T1::= textoEntreEtiquetas:a
         botonTexto = false;
         Principal.archivoHTML.finalizarBoton();  
     :}
+    |menorQue inicioHS U interrogacion
+    |inicioHS U interrogacion
 ;
 
 U::= U U1
@@ -645,6 +711,24 @@ U1::= dolar identificador:a igual V:b puntoYComa
             default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
                 break;
         }
+    :}
+    |AQ00 parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |AQ00 parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra controlElse llaveAbre AO10 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |U5 parentesisAbre AN parentesisCierra llaveAbre AO llaveCierra
+    {:
+        contadorRepetidor--;
+    :}
+;
+
+U5::= repetir
+    {:
+        repetidores = new ArrayList();
     :}
 ;
 
@@ -762,6 +846,24 @@ V2::= V2:a mas V2:b
         {:
             try{
                 RESULT = Double.parseDouble(a);
+            }catch(Exception ex){
+                System.out.println("Error al detectar valor numerico en variable double");
+                RESULT = 0;
+            }
+        :}
+    |menos entero:a
+        {:
+            try{
+                RESULT = (Integer.parseInt(a)*-1);
+            }catch(Exception ex){
+                System.out.println("Error al detectar valor numerico en variable int");
+                RESULT = 0;
+            }
+        :}
+    |menos decimal:a
+        {:
+            try{
+                RESULT = (Double.parseDouble(a)*-1);
             }catch(Exception ex){
                 System.out.println("Error al detectar valor numerico en variable double");
                 RESULT = 0;
@@ -1221,7 +1323,8 @@ AJ::= textoEntreComillas:a
     {:
         RESULT = a;
     :}
-;
+    |numeral identificador punto AH1
+; 
 
 AK::= dolar identificador:a
     {:
@@ -1245,4 +1348,364 @@ AL::= dolar identificador:a
 
 
 AM::= parentesisAbre parentesisCierra puntoYComa
+;
+
+AN::= dolar identificador:a
+    {:
+        contadorRepetidor++;
+        repetidores.add(Integer.parseInt(Principal.retornarValorCadenaVariable(a)));
+    :}
+    |entero:a
+    {:
+        contadorRepetidor++;
+        repetidores.add(Integer.parseInt(a));
+    :}
+;
+
+AO::= AO AP
+    |AP
+;
+
+
+AP::= echo W:a puntoYComa
+    {:
+        if(contadorRepetidor > 0){
+            for(int i = 0; i < repetidores.get(contadorRepetidor); i++)
+                Principal.txtConsola.append(a+"\n");
+        }else{
+            for(int i = 0; i < repetidores.get(0); i++)
+                Principal.txtConsola.append(a+"\n");
+        }
+    :}
+    |numeral U2 punto insertar parentesisAbre parentesisCierra puntoYComa
+    {:
+        if(contadorRepetidor > 0){
+            for(int i = 0; i < repetidores.get(contadorRepetidor); i++){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }else{
+            for(int i = 0; i < repetidores.get(0); i++){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }
+    :}
+    |AQ00 parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |AQ00 parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra controlElse llaveAbre AO10 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |repetir parentesisAbre AN parentesisCierra llaveAbre AO llaveCierra
+    {:
+        contadorRepetidor--;
+    :}
+;
+
+AO1::= AO1 AP1
+    |AP1
+;
+
+AP1::= echo W:a puntoYComa
+    {:
+        if(contadorIf > 0){
+            if(condicionales.get(contadorIf)){
+                Principal.txtConsola.append(a+"\n");
+            }
+        }else{
+            if(condicionales.get(0)){
+                Principal.txtConsola.append(a+"\n");
+            }
+        }
+    :}
+    |numeral U2 punto insertar parentesisAbre parentesisCierra puntoYComa
+    {:
+        if(contadorIf > 0){
+            if(condicionales.get(contadorIf)){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }else{
+            if(condicionales.get(0)){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }
+    :}
+    |controlIf parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |controlIf parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra controlElse llaveAbre AO10 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |U5 parentesisAbre AN parentesisCierra llaveAbre AO llaveCierra
+    {:
+        contadorRepetidor--;
+    :}
+;
+
+AO10::= AO10 AP10
+    |AP10
+;
+
+AP10::= echo W:a puntoYComa
+    {:
+        if(contadorIf > 0){
+            if(!condicionales.get(contadorIf)){
+                Principal.txtConsola.append(a+"\n");
+            }
+        }else{
+            if(condicionales.get(0)){
+                Principal.txtConsola.append(a+"\n");
+            }
+        }
+    :}
+    |numeral U2 punto insertar parentesisAbre parentesisCierra puntoYComa
+    {:
+        if(contadorIf > 0){
+            if(!condicionales.get(contadorIf)){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }else{
+            if(condicionales.get(0)){
+                Struct struct = Principal.retornarStruct(identificadorStruct);
+                switch(struct.getTipo()){
+                    case "parrafo": ((StructParrafo)struct.getValor()).insertar();
+                        break;
+                    case "textoA": ((StructTextoA)struct.getValor()).insertar();
+                        break;
+                    case "textoB": ((StructTextoB)struct.getValor()).insertar();
+                        break;
+                    case "imagen": ((StructImagen)struct.getValor()).insertar();
+                        break;
+                    case "tabla": ((StructTabla)struct.getValor()).insertar();
+                        break;
+                    case "boton": ((StructBoton)struct.getValor()).insertar();
+                        break;
+                    default: Principal.errores.add(new Token("ESTRUCTURA INVALIDA", "ERROR SINTACTICO - FUNCION NO ENCONTRADA", 0, 0));
+                        break;
+                }
+            }
+        }
+    :}
+    |controlIf parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |controlIf parentesisAbre AQ0 parentesisCierra llaveAbre AO1 llaveCierra controlElse llaveAbre AO10 llaveCierra
+    {:
+        contadorIf--;
+    :}
+    |U5 parentesisAbre AN parentesisCierra llaveAbre AO llaveCierra
+    {:
+        contadorRepetidor--;
+    :}
+;
+
+AQ00::= controlIf
+    {:
+        condicionales = new ArrayList();
+    :}
+;
+
+AQ0::= AQ:a
+    {:
+        contadorIf++;
+        condicionales.add(a);
+    :}
+;
+
+AQ::= AQ:a and AQ:b
+        {:
+            if(a && b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AQ:a or AQ:b
+        {:
+            if(a | b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}   
+    |not AQ:a
+        {:
+            if(!a)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |parentesisAbre AQ:a parentesisCierra
+        {:
+            RESULT = a;
+        :}
+    |AR:a
+        {:
+            RESULT = a;
+        :}
+;
+
+AR::= AS:a menorQue AS:b
+        {:
+            if(a < b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AS:a mayorQue AS:b
+        {:
+            if(a > b)
+                RESULT = true;
+            else
+                RESULT = false;    
+        :}
+    |AS:a menorIgual AS:b
+        {:
+            if(a <= b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AS:a mayorIgual AS:b
+        {:
+            if(a >= b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AS:a noIgual AS:b
+        {:
+            if(a != b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AS:a igualIgual AS:b
+        {:
+            if(a == b)
+                RESULT = true;
+            else
+                RESULT = false;
+        :}
+    |AS:a
+        {:
+                RESULT = (a > 0)? true : false;
+        :}
+;
+
+AS::= dolar identificador:a
+        {:
+            Variable var = Principal.retornarVariable(a);
+            switch(var.getTipo()){
+                case "entero": RESULT = Double.parseDouble(var.getValor().toString());
+                break;
+                case "decimal": RESULT = Double.parseDouble(var.getValor().toString());
+                break;
+                case "booleano": RESULT = (Boolean.valueOf(var.getValor().toString())) ? 1.0 : 0;
+                break;
+                default: Principal.errores.add(new Token("TIPO DATO INVALIDO", "ERROR SINTACTICO - TIPO DATO NO ESPERADO", 0, 0));
+                break;
+            }
+        :}
+    |booleano:a
+        {:
+            RESULT = (Boolean.valueOf(a)) ? 1.0 : 0;
+        :}
+    |V1:a
+        {:
+            RESULT = Double.parseDouble(a.toString());
+        :}
+;
+
+AH1::= getContenido AH2
+    |getAlineacion AH2
+    |getPath AH2
+    |getAncho AH2
+    |getAlto AH2
+    |getTexto AH2
+;
+
+AH2::= parentesisAbre parentesisCierra
 ;

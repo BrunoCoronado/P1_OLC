@@ -54,10 +54,14 @@ public class StructImagen {
 
     public void insertar(){
         String etiquetaImagen = "\n<img src=\"" + path + "\" ";
-        if(!ancho.equals(""))
-            etiquetaImagen += "width=\"" + ancho + "\" ";
-        if(!alto.equals(""))
-            etiquetaImagen += "heigth=\"" + alto + "\" ";
+        if(!ancho.equals("")){
+            if(!ancho.contains("-"))
+                etiquetaImagen += "heigth=\"" + alto + "\" ";
+        }
+        if(!alto.equals("")){
+            if(!alto.contains("-"))
+                etiquetaImagen += "width=\"" + alto + "\" ";
+        }
         Principal.archivoHTML.setCodigoHTML(Principal.archivoHTML.getCodigoHTML() +  etiquetaImagen + ">\n");
     }
 }
